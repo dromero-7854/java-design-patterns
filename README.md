@@ -1,10 +1,5 @@
----
-description: >-
-  Los patrones de comportamiento tratan con algoritmos y la asignación de
-  responsabilidades entre objetos.
----
-
 # Patrones de comportamiento
+Los patrones de comportamiento tratan con algoritmos y la asignación de responsabilidades entre objetos.
 
 ## Chain of Responsibility
 
@@ -154,7 +149,7 @@ public class ThrottlingMiddleware extends Middleware {
 }
 ```
 
-#### :page\_facing\_up: **middleware/UserExistsMiddleware.java **<mark style="color:green;">****</mark>** (**Comprueba las credenciales del usuario)
+#### :page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba las credenciales del usuario)**
 
 ```java
 package chain_of_responsibility.example.middleware;
