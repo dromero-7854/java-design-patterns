@@ -109,7 +109,7 @@ public abstract class Middleware {
 }
 ```
 
-#### ****:page\_facing\_up: **middleware/ThrottlingMiddleware.java (**Comprueba el límite de cantidad de solicitudes**)**
+#### :page\_facing\_up: **middleware/ThrottlingMiddleware.java (**Comprueba el límite de cantidad de solicitudes**)**
 
 ```java
 package chain_of_responsibility.example.middleware;
