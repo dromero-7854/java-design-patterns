@@ -66,7 +66,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 #### :open\_file\_folder: **middleware**
 
-#### ****:page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
+#### :page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
 
 ```java
 package chain_of_responsibility.example.middleware;
