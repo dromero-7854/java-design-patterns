@@ -1,4 +1,5 @@
 # Patrones de comportamiento
+
 Los patrones de comportamiento tratan con algoritmos y la asignación de responsabilidades entre objetos.
 
 ## Chain of Responsibility
@@ -16,8 +17,6 @@ Imagina que estás trabajando en un sistema de pedidos online. Quieres restringi
 Tras planificar un poco, te das cuenta de que estas comprobaciones deben realizarse secuencialmente. La aplicación puede intentar autenticar a un usuario en el sistema cuando reciba una solicitud que contenga las credenciales del usuario. Sin embargo, si esas credenciales no son correctas y la autenticación falla, no hay razón para proceder con otras comprobaciones.
 
 <figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
-
-
 
 Durante los meses siguientes, implementas varias de esas comprobaciones secuenciales.
 
@@ -59,271 +58,13 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-#### :open\_file\_folder: **middleware**
-
-#### :page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
-
-```java
-package chain_of_responsibility.example.middleware;
-
-/**
- * Base middleware class.
- */
-public abstract class Middleware {
-
-	private Middleware next;
-
-	/**
-	 * Builds chains of middleware objects.
-	 */
-	public static Middleware link(Middleware first, Middleware... chain) {
-		Middleware head = first;
-		for (Middleware nextInChain: chain) {
-			head.next = nextInChain;
-			head = nextInChain;
-		}
-		return first;
-	}
-
-	/**
-	 * Subclasses will implement this method with concrete checks.
-	 */
-	public abstract boolean check(String email, String password);
-
-	/**
-	 * Runs check on the next object in chain or ends traversing if we're in
-	 * last object in chain.
-	 */
-	protected boolean checkNext(String email, String password) {
-		if (next == null) {
-			return true;
-		}
-		return next.check(email, password);
-	}
-
-}
-```
-
-#### :page\_facing\_up: **middleware/ThrottlingMiddleware.java (**Comprueba el límite de cantidad de solicitudes**)**
-
-```java
-package chain_of_responsibility.example.middleware;
-
-/**
- * ConcreteHandler. Checks whether there are too many failed login requests.
- */
-public class ThrottlingMiddleware extends Middleware {
-
-	private int requestPerMinute;
-	private int request;
-	private long currentTime;
-
-	public ThrottlingMiddleware(int requestPerMinute) {
-		this.requestPerMinute = requestPerMinute;
-		this.currentTime = System.currentTimeMillis();
-	}
-
-	/**
-	 * Please, not that checkNext() call can be inserted both in the beginning
-	 * of this method and in the end.
-	 *
-	 * This gives much more flexibility than a simple loop over all middleware
-	 * objects. For instance, an element of a chain can change the order of
-	 * checks by running its check after all other checks.
-	 */
-	public boolean check(String email, String password) {
-		if (System.currentTimeMillis() > currentTime + 60_000) {
-			request = 0;
-			currentTime = System.currentTimeMillis();
-		}
-
-		request++;
-
-		if (request > requestPerMinute) {
-			System.out.println("Request limit exceeded!");
-			Thread.currentThread().stop();
-		}
-		return checkNext(email, password);
-	}
-
-}
-```
-
-#### :page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba las credenciales del usuario)**
-
-```java
-package chain_of_responsibility.example.middleware;
-
-import chain_of_responsibility.example.server.Server;
-
-/**
- * ConcreteHandler. Checks whether a user with the given credentials exists.
- */
-public class UserExistsMiddleware extends Middleware {
-
-	private Server server;
-
-	public UserExistsMiddleware(Server server) {
-		this.server = server;
-	}
-
-	public boolean check(String email, String password) {
-		if (!server.hasEmail(email)) {
-			System.out.println("This email is not registered!");
-			return false;
-		}
-		if (!server.isValidPassword(email, password)) {
-			System.out.println("Wrong password!");
-			return false;
-		}
-		return checkNext(email, password);
-	}
-
-}
-```
-
-#### :page\_facing\_up: middleware/RoleCheckMiddleware.java (Comprueba el papel del usuario)
-
-```java
-package chain_of_responsibility.example.middleware;
-
-/**
- * ConcreteHandler. Checks a user's role.
- */
-public class RoleCheckMiddleware extends Middleware {
-	
-	public boolean check(String email, String password) {
-        if (email.equals("admin@example.com")) {
-            System.out.println("Hello, admin!");
-            return true;
-        }
-        System.out.println("Hello, user!");
-        return checkNext(email, password);
-    }
-
-}
-```
-
-#### :open\_file\_folder: **server**
-
-#### :page\_facing\_up: server/Server.java (Objetivo de la autorización)
-
-```java
-package chain_of_responsibility.example.server;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import chain_of_responsibility.example.middleware.Middleware;
-
-/**
- * Server class.
- */
-public class Server {
-
-	private Map<String, String> users = new HashMap<>();
-	private Middleware middleware;
-
-	/**
-	 * Client passes a chain of object to server. This improves flexibility and
-	 * makes testing the server class easier.
-	 */
-	public void setMiddleware(Middleware middleware) {
-		this.middleware = middleware;
-	}
-
-	/**
-	 * Server gets email and password from client and sends the authorization
-	 * request to the chain.
-	 */
-	public boolean logIn(String email, String password) {
-		if (middleware.check(email, password)) {
-			System.out.println("Authorization have been successful!");
-
-			// Do something useful here for authorized users.
-
-			return true;
-		}
-		return false;
-	}
-
-	public void register(String email, String password) {
-		users.put(email, password);
-	}
-
-	public boolean hasEmail(String email) {
-		return users.containsKey(email);
-	}
-
-	public boolean isValidPassword(String email, String password) {
-		return users.get(email).equals(password);
-	}
-
-}
-```
-
-#### :page\_facing\_up: Demo.java
-
-```java
-package chain_of_responsibility.example;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import chain_of_responsibility.example.middleware.Middleware;
-import chain_of_responsibility.example.middleware.RoleCheckMiddleware;
-import chain_of_responsibility.example.middleware.ThrottlingMiddleware;
-import chain_of_responsibility.example.middleware.UserExistsMiddleware;
-import chain_of_responsibility.example.server.Server;
-
-/**
- * Demo class. Everything comes together here.
- */
-public class Demo {
-
-	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	private static Server server;
-
-	private static void init() {
-		server = new Server();
-		server.register("admin@example.com", "admin_pass");
-		server.register("user@example.com", "user_pass");
-
-		// All checks are linked. Client can build various chains using the same
-		// components.
-		Middleware middleware = Middleware.link(
-				new ThrottlingMiddleware(2),
-				new UserExistsMiddleware(server),
-				new RoleCheckMiddleware()
-				);
-
-		// Server gets a chain from client code.
-		server.setMiddleware(middleware);
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		init();
-
-		boolean success;
-		do {
-			System.out.print("Enter email: ");
-			String email = reader.readLine();
-			System.out.print("Input password: ");
-			String password = reader.readLine();
-			success = server.logIn(email, password);
-		} while (!success);
-	}
-
-}
-```
+{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example" %}
 
 ## Command
 
 ### Propósito
 
-<mark style="background-color:yellow;">**Command**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que convierte una solicitud en un objeto independiente que contiene toda la información sobre la solicitud.</mark> Esta transformación te permite parametrizar los métodos con diferentes solicitudes, retrasar o poner en cola la ejecución de una solicitud y soportar operaciones que no se pueden realizar.
+<mark style="background-color:yellow;">**Command**</mark> <mark style="background-color:yellow;">es un patrón de diseño de comportamiento que convierte una solicitud en un objeto independiente que contiene toda la información sobre la solicitud.</mark> Esta transformación te permite parametrizar los métodos con diferentes solicitudes, retrasar o poner en cola la ejecución de una solicitud y soportar operaciones que no se pueden realizar.
 
 <figure><img src=".gitbook/assets/command-es.png" alt=""><figcaption></figcaption></figure>
 
@@ -335,7 +76,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src=".gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2 (1) (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -353,7 +94,7 @@ El código puede tener este aspecto: un objeto GUI invoca a un método de un obj
 
 <figure><img src=".gitbook/assets/solution1-es.png" alt=""><figcaption><p>Los objetos GUI pueden acceder directamente a los objetos de la lógica de negocio.</p></figcaption></figure>
 
-<mark style="background-color:yellow;">El patrón Command sugiere que los objetos GUI no envíen estas solicitudes directamente. En lugar de ello, debes extraer todos los detalles de la solicitud, como el objeto que está siendo invocado, el nombre del método y la lista de argumentos, y ponerlos dentro de una clase</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">comando</mark>_ <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">separada con un único método que activa esta solicitud.</mark>
+<mark style="background-color:yellow;">El patrón Command sugiere que los objetos GUI no envíen estas solicitudes directamente. En lugar de ello, debes extraer todos los detalles de la solicitud, como el objeto que está siendo invocado, el nombre del método y la lista de argumentos, y ponerlos dentro de una clase</mark> _<mark style="background-color:yellow;">comando</mark>_ <mark style="background-color:yellow;">separada con un único método que activa esta solicitud.</mark>
 
 Los objetos de comando sirven como vínculo entre varios objetos GUI y de lógica de negocio. De ahora en adelante, el objeto GUI no tiene que conocer qué objeto de la lógica de negocio recibirá la solicitud y cómo la procesará. El objeto GUI activa el comando, que gestiona todos los detalles.
 
@@ -361,7 +102,7 @@ Los objetos de comando sirven como vínculo entre varios objetos GUI y de lógic
 
 El siguiente paso es hacer que tus comandos implementen la misma interfaz. Normalmente tiene un único método de ejecución que no acepta parámetros. Esta interfaz te permite utilizar varios comandos con el mismo emisor de la solicitud, sin acoplarla a clases concretas de comandos. Adicionalmente, ahora puedes cambiar objetos de comando vinculados al emisor, cambiando efectivamente el comportamiento del emisor durante el tiempo de ejecución.
 
-Puede que hayas observado que falta una pieza del rompecabezas, que son los parámetros de la solicitud. Un objeto GUI puede haber proporcionado al objeto de la capa de negocio algunos parámetros. Ya que el método de ejecución del comando no tiene parámetros, ¿cómo pasaremos los detalles de la solicitud al receptor? <mark style="background-color:yellow;">Resulta que el comando debe estar preconfigurado con esta información o ser capaz de conseguirla por su cuenta.mage</mark>
+Puede que hayas observado que falta una pieza del rompecabezas, que son los parámetros de la solicitud. Un objeto GUI puede haber proporcionado al objeto de la capa de negocio algunos parámetros. Ya que el método de ejecución del comando no tiene parámetros, ¿cómo pasaremos los detalles de la solicitud al receptor? <mark style="background-color:yellow;">Resulta que el comando debe estar preconfigurado con esta información o ser capaz de conseguirla por su cuenta.</mark>
 
 <figure><img src=".gitbook/assets/solution3-es.png" alt=""><figcaption><p>Los objetos GUI delegan el trabajo a los comandos.</p></figcaption></figure>
 
@@ -373,7 +114,7 @@ Otros elementos GUI, como menús, atajos o diálogos enteros, se pueden implemen
 
 <mark style="background-color:yellow;">Como resultado, los comandos se convierten en una conveniente capa intermedia que reduce el acoplamiento entre las capas de la GUI y la lógica de negocio.</mark> ¡Y esto es tan solo una fracción de las ventajas que ofrece el patrón Command!
 
-## **Command** in Java
+## Command in Java
 
 ### Comandos de editor de texto y deshacer <a href="#example-0-title" id="example-0-title"></a>
 
@@ -381,250 +122,50 @@ El editor de texto de este ejemplo crea nuevos objetos de comando cada vez que u
 
 Ahora, para realizar la operación deshacer (undo), la aplicación toma el último comando ejecutado del historial y, o bien realiza una acción inversa, o bien restaura el pasado estado del editor guardado por ese comando.
 
-#### :open\_file\_folder: **commands**
+{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example" %}
 
-#### :page\_facing\_up: **commands/Command.java (Comando base abstracto)**
+## Iterator
 
-```java
-package command.example.commands;
+### Propósito
 
-import command.example.editor.Editor;
+**Iterator** es un patrón de diseño de comportamiento que te permite recorrer elementos de una colección sin exponer su representación subyacente (lista, pila, árbol, etc.)
 
-public abstract class Command {
+<figure><img src=".gitbook/assets/iterator-es.png" alt=""><figcaption></figcaption></figure>
 
-	public Editor editor;
-	private String backup;
+### Problema
 
-	Command(Editor editor) {
-		this.editor = editor;
-	}
+Las colecciones son de los tipos de datos más utilizados en programación. Sin embargo, una colección tan solo es un contenedor para un grupo de objetos.
 
-	void backup() {
-		backup = editor.textField.getText();
-	}
+<figure><img src=".gitbook/assets/problem1.png" alt=""><figcaption><p>Varios tipos de colecciones.</p></figcaption></figure>
 
-	public void undo() {
-		editor.textField.setText(backup);
-	}
+La mayoría de las colecciones almacena sus elementos en simples listas, pero algunas de ellas se basan en pilas, árboles, grafos y otras estructuras complejas de datos.
 
-	public abstract boolean execute();
+Independientemente de cómo se estructure una colección, <mark style="background-color:yellow;">debe aportar una forma de acceder a sus elementos de modo que otro código pueda utilizar dichos elementos</mark>. Debe haber una forma de recorrer cada elemento de la colección sin acceder a los mismos elementos una y otra vez.
 
-}
-```
+Esto puede parecer un trabajo sencillo si tienes una colección basada en una lista. En este caso sólo tienes que recorrer en bucle todos sus elementos. Pero, ¿cómo recorres secuencialmente elementos de una estructura compleja de datos, como un árbol? Por ejemplo, un día puede bastarte con un recorrido de profundidad de un árbol, pero, al día siguiente, quizá necesites un recorrido en anchura. Y, la semana siguiente, puedes necesitar otra cosa, como un acceso aleatorio a los elementos del árbol.
 
-#### :page\_facing\_up: **commands/CopyCommand.java (Copiar el texto seleccionado en el portapapeles)**
+<figure><img src=".gitbook/assets/problem2.png" alt=""><figcaption><p>La misma colección puede recorrerse de varias formas diferentes.</p></figcaption></figure>
 
-```java
-package command.example.commands;
+Añadir más y más algoritmos de recorrido a la colección nubla gradualmente su responsabilidad principal, que es el almacenamiento eficiente de la información. Además, puede que algunos algoritmos estén personalizados para una aplicación específica, por lo que incluirlos en una clase genérica de colección puede resultar extraño.
 
-import command.example.editor.Editor;
+Por otro lado, el código cliente que debe funcionar con varias colecciones puede no saber cómo éstas almacenan sus elementos. No obstante, ya que todas las colecciones proporcionan formas diferentes de acceder a sus elementos, no tienes otra opción más que acoplar tu código a las clases de la colección específica.
 
-public class CopyCommand extends Command {
+### Solución
 
-	public CopyCommand(Editor editor) {
-		super(editor);
-	}
+<mark style="background-color:yellow;">La idea central del patrón Iterator es extraer el comportamiento de recorrido de una colección y colocarlo en un objeto independiente llamado</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">iterador</mark>_<mark style="background-color:yellow;">.</mark>
 
-	@Override
-	public boolean execute() {
-		editor.clipboard = editor.textField.getSelectedText();
-		return false;
-	}
+<figure><img src=".gitbook/assets/solution1.png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
 
-}
-```
+<mark style="background-color:yellow;">Además de implementar el propio algoritmo, un objeto iterador encapsula todos los detalles del recorrido, como la posición actual y cuántos elementos quedan hasta el final.</mark> Debido a esto, varios iteradores pueden recorrer la misma colección al mismo tiempo, independientemente los unos de los otros.
 
-#### :page\_facing\_up: **commands/PasteCommand.java (Pegar texto desde el portapapeles)**
+Normalmente, los iteradores aportan un método principal para extraer elementos de la colección. El cliente puede continuar ejecutando este método hasta que no devuelva nada, lo que significa que el iterador ha recorrido todos los elementos.
 
-```java
-package command.example.commands;
+Todos los iteradores deben implementar la misma interfaz. Esto hace que el código cliente sea compatible con cualquier tipo de colección o cualquier algoritmo de recorrido, siempre y cuando exista un iterador adecuado. Si necesitas una forma particular de recorrer una colección, creas una nueva clase iteradora sin tener que cambiar la colección o el cliente.
 
-import command.example.editor.Editor;
+## Iterator in Java
 
-public class PasteCommand extends Command {
+### Iteración en perfiles de redes sociales <a href="#example-0-title" id="example-0-title"></a>
 
-	public PasteCommand(Editor editor) {
-		super(editor);
-	}
+En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales de una colección remota de una red social, sin exponer los detalles de la comunicación al código cliente.
 
-	@Override
-	public boolean execute() {
-		if (editor.clipboard == null || editor.clipboard.isEmpty()) return false;
-
-		backup();
-		editor.textField.insert(editor.clipboard, editor.textField.getCaretPosition());
-		return true;
-	}
-
-}
-```
-
-#### :page\_facing\_up: **commands/CutCommand.java (Cortar texto al portapapeles)**
-
-```java
-package command.example.commands;
-
-import command.example.editor.Editor;
-
-public class CutCommand extends Command {
-
-	public CutCommand(Editor editor) {
-		super(editor);
-	}
-
-	@Override
-	public boolean execute() {
-		if (editor.textField.getSelectedText().isEmpty()) return false;
-
-		backup();
-		String source = editor.textField.getText();
-		editor.clipboard = editor.textField.getSelectedText();
-		editor.textField.setText(cutString(source));
-		return true;
-	}
-
-	private String cutString(String source) {
-		String start = source.substring(0, editor.textField.getSelectionStart());
-		String end = source.substring(editor.textField.getSelectionEnd());
-		return start + end;
-	}
-
-}
-```
-
-#### :page\_facing\_up: **commands/CommandHistory.java (Historial del comando)**
-
-```java
-package command.example.commands;
-
-import java.util.Stack;
-
-public class CommandHistory {
-
-	private Stack<Command> history = new Stack<>();
-
-	public void push(Command c) {
-		history.push(c);
-	}
-
-	public Command pop() {
-		return history.pop();
-	}
-
-	public boolean isEmpty() { return history.isEmpty(); }
-
-}
-```
-
-#### :open\_file\_folder: **editor**
-
-#### :page\_facing\_up: **editor/Editor.java (Historial del comando)**
-
-```java
-package command.example.editor;
-
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;		
-import javax.swing.JTextArea;
-import javax.swing.WindowConstants;
-
-import command.example.commands.Command;
-import command.example.commands.CommandHistory;
-import command.example.commands.CopyCommand;
-import command.example.commands.CutCommand;
-import command.example.commands.PasteCommand;
-
-public class Editor {
-
-	public JTextArea textField;
-	public String clipboard;
-	private CommandHistory history = new CommandHistory();
-
-	public void init() {
-		JFrame frame = new JFrame("Text editor (type & use buttons, Luke!)");
-		JPanel content = new JPanel();
-		frame.setContentPane(content);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-		textField = new JTextArea();
-		textField.setLineWrap(true);
-		content.add(textField);
-		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JButton ctrlC = new JButton("Ctrl+C");
-		JButton ctrlX = new JButton("Ctrl+X");
-		JButton ctrlV = new JButton("Ctrl+V");
-		JButton ctrlZ = new JButton("Ctrl+Z");
-		Editor editor = this;
-		ctrlC.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				executeCommand(new CopyCommand(editor));
-			}
-		});
-		ctrlX.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				executeCommand(new CutCommand(editor));
-			}
-		});
-		ctrlV.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				executeCommand(new PasteCommand(editor));
-			}
-		});
-		ctrlZ.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				undo();
-			}
-		});
-		buttons.add(ctrlC);
-		buttons.add(ctrlX);
-		buttons.add(ctrlV);
-		buttons.add(ctrlZ);
-		content.add(buttons);
-		frame.setSize(450, 200);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
-
-	private void executeCommand(Command command) {
-		if (command.execute()) {
-			history.push(command);
-		}
-	}
-
-	private void undo() {
-		if (history.isEmpty()) return;
-
-		Command command = history.pop();
-		if (command != null) {
-			command.undo();
-		}
-	}
-}
-```
-
-#### :page\_facing\_up: Demo.java
-
-```java
-package command.example;
-
-import command.example.editor.Editor;
-
-public class Demo {
-
-	public static void main(String[] args) {
-		Editor editor = new Editor();
-		editor.init();
-	}
-
-}
-```
+{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example" %}
