@@ -270,7 +270,7 @@ De este modo, el patrón Mediator te permite encapsular una compleja red de rela
 
 Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con la ayuda de un mediador sin que dependan los unos de los otros.
 
-#### :open\_file\_folder: **components (**Clases colegas)
+#### :open\_file\_folder: **components (Clases colegas)**
 
 :page\_facing\_up: **components/Component.java**
 
@@ -296,6 +296,6 @@ Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con 
 
 :page\_facing\_up: **mediator/Note.java (Una clase de nota)**
 
-****:page\_facing\_up: **Demo.java (Código de inicialización)**
+:page\_facing\_up: **Demo.java (Código de inicialización)**
 
 :link: [Mediator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
