@@ -74,7 +74,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Chain of Responsibility in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
+:link: [Chain of Responsibility in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
 
 ## Command
 
@@ -92,7 +92,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src=".gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2 (1) (2).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -108,7 +108,7 @@ El buen diseño de software a menudo se basa en el principio de separación de r
 
 El código puede tener este aspecto: un objeto GUI invoca a un método de un objeto de la lógica de negocio, pasándole algunos argumentos. Este proceso se describe habitualmente como un objeto que envía a otro una _solicitud_.
 
-<figure><img src=".gitbook/assets/solution1-es.png" alt=""><figcaption><p>Los objetos GUI pueden acceder directamente a los objetos de la lógica de negocio.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/solution1-es (2).png" alt=""><figcaption><p>Los objetos GUI pueden acceder directamente a los objetos de la lógica de negocio.</p></figcaption></figure>
 
 <mark style="background-color:yellow;">El patrón Command sugiere que los objetos GUI no envíen estas solicitudes directamente. En lugar de ello, debes extraer todos los detalles de la solicitud, como el objeto que está siendo invocado, el nombre del método y la lista de argumentos, y ponerlos dentro de una clase</mark> _<mark style="background-color:yellow;">comando</mark>_ <mark style="background-color:yellow;">separada con un único método que activa esta solicitud.</mark>
 
@@ -156,7 +156,7 @@ Ahora, para realizar la operación deshacer (undo), la aplicación toma el últi
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Command in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
+:link: [Command in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
 
 ## Iterator
 
@@ -228,13 +228,13 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Iterator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
+:link: [Iterator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
 
 ## Mediator
 
 ### Propósito <a href="#intent" id="intent"></a>
 
-<mark style="background-color:yellow;">**Mediator**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite reducir las dependencias caóticas entre objetos. El patrón restringe las comunicaciones directas entre los objetos, forzándolos a colaborar únicamente a través de un objeto mediador.</mark>
+<mark style="background-color:yellow;">**Mediator**</mark> <mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite reducir las dependencias caóticas entre objetos. El patrón restringe las comunicaciones directas entre los objetos, forzándolos a colaborar únicamente a través de un objeto mediador.</mark>
 
 <figure><img src=".gitbook/assets/mediator.png" alt=""><figcaption></figcaption></figure>
 
@@ -242,4 +242,81 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 Digamos que tienes un diálogo para crear y editar perfiles de cliente. Consiste en varios controles de formulario, como campos de texto, casillas, botones, etc.
 
-<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption><p>Las relaciones entre los elementos de la interfaz de usuario pueden volverse caóticas cuando la aplicación crece.</p></figcaption></figure>
+
+Algunos de los elementos del formulario pueden interactuar con otros. Por ejemplo, al seleccionar la casilla “tengo un perro” puede aparecer un campo de texto oculto para introducir el nombre del perro. Otro ejemplo es el botón de envío que tiene que validar los valores de todos los campos antes de guardar la información.
+
+<figure><img src=".gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Los elementos pueden tener muchas relaciones con otros elementos. Por eso, los cambios en algunos elementos pueden afectar a los demás.</p></figcaption></figure>
+
+Al implementar esta lógica directamente dentro del código de los elementos del formulario, haces que las clases de estos elementos sean mucho más difíciles de reutilizar en otros formularios de la aplicación. Por ejemplo, no podrás utilizar la clase de la casilla dentro de otro formulario porque está acoplada al campo de texto del perro. O bien podrás utilizar todas las clases implicadas en representar el formulario de perfil, o no podrás usar ninguna en absoluto.
+
+### Solución <a href="#solution" id="solution"></a>
+
+<mark style="background-color:yellow;">El patrón Mediator sugiere que detengas toda comunicación directa entre los componentes que quieres hacer independientes entre sí. En lugar de ello, estos componentes deberán colaborar indirectamente, invocando un objeto mediador especial que redireccione las llamadas a los componentes adecuados. Como resultado, los componentes dependen únicamente de una sola clase mediadora, en lugar de estar acoplados a decenas de sus colegas.</mark>
+
+En nuestro ejemplo del formulario de edición de perfiles, la propia clase de diálogo puede actuar como mediadora. Lo más probable es que la clase de diálogo conozca ya todos sus subelementos, por lo que ni siquiera será necesario que introduzcas nuevas dependencias en esta clase.
+
+<figure><img src=".gitbook/assets/solution1-es.png" alt=""><figcaption><p>Los elementos UI deben comunicarse indirectamente, a través del objeto mediador.</p></figcaption></figure>
+
+El cambio más significativo lo sufren los propios elementos del formulario. Pensemos en el botón de envío. Antes, cada vez que un usuario hacía clic en el botón, tenía que validar los valores de todos los elementos individuales del formulario. Ahora su único trabajo consiste en notificar al diálogo acerca del clic. Al recibir esta notificación, el propio diálogo realiza las validaciones o pasa la tarea a los elementos individuales. De este modo, en lugar de estar ligado a una docena de elementos del formulario, el botón solo es dependiente de la clase diálogo.
+
+Puedes ir más lejos y reducir en mayor medida la dependencia extrayendo la interfaz común para todos los tipos de diálogo. La interfaz declarará el método de notificación que pueden utilizar todos los elementos del formulario para notificar al diálogo sobre los eventos que le suceden a estos elementos. Por lo tanto, ahora nuestro botón de envío debería poder funcionar con cualquier diálogo que implemente esa interfaz.
+
+De este modo, el patrón Mediator te permite encapsular una compleja red de relaciones entre varios objetos dentro de un único objeto mediador. Cuantas menos dependencias tenga una clase, más fácil es modificar, extender o reutilizar esa clase.
+
+## Mediator in Java
+
+### Aplicación de notas <a href="#example-0-title" id="example-0-title"></a>
+
+Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con la ayuda de un mediador sin que dependan los unos de los otros.
+
+#### :open\_file\_folder: **components (Clases colegas)**
+
+:page\_facing\_up: **components/Component.java**
+
+:page\_facing\_up: **components/AddButton.java**
+
+:page\_facing\_up: **components/DeleteButton.java**
+
+:page\_facing\_up: **components/Filter.java**
+
+:page\_facing\_up: **components/List.java**
+
+:page\_facing\_up: **components/SaveButton.java**
+
+:page\_facing\_up: **components/TextBox.java**
+
+:page\_facing\_up: **components/Title.java**
+
+#### :open\_file\_folder: **mediator**
+
+:page\_facing\_up: **mediator/Mediator.java (Define la interfaz mediadora común)**
+
+:page\_facing\_up: **mediator/Editor.java (Mediadora concreta)**
+
+:page\_facing\_up: **mediator/Note.java (Una clase de nota)**
+
+:page\_facing\_up: **Demo.java (Código de inicialización)**
+
+:link: [Mediator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
+
+## Memento
+
+### Propósito <a href="#intent" id="intent"></a>
+
+<mark style="background-color:yellow;">**Memento**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite guardar y restaurar el estado previo de un objeto sin revelar los detalles de su implementación.</mark>
+
+<figure><img src=".gitbook/assets/memento-es.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina que estás creando una aplicación de edición de texto. Además de editar texto, tu programa puede formatearlo, asi como insertar imágenes en línea, etc.
+
+En cierto momento, decides permitir a los usuarios deshacer cualquier operación realizada en el texto. Esta función se ha vuelto tan habitual en los últimos años que hoy en día todo el mundo espera que todas las aplicaciones la tengan. Para la implementación eliges la solución directa. Antes de realizar cualquier operación, la aplicación registra el estado de todos los objetos y lo guarda en un almacenamiento. Más tarde, cuando un usuario decide revertir una acción, la aplicación extrae la última _instantánea_ del historial y la utiliza para restaurar el estado de todos los objetos.
+
+<figure><img src=".gitbook/assets/problem1-es (2).png" alt=""><figcaption><p>Antes de ejecutar una operación, la aplicación guarda una instantánea del estado de los objetos, que más tarde se puede utilizar para restaurar objetos a su estado previo.</p></figcaption></figure>
+
+Pensemos en estas instantáneas de estado. ¿Cómo producirías una, exactamente? Probablemente tengas que recorrer todos los campos de un objeto y copiar sus valores en el almacenamiento. Sin embargo, esto sólo funcionará si el objeto tiene unas restricciones bastante laxas al acceso a sus contenidos. Lamentablemente, la mayoría de objetos reales no permite a otros asomarse a su interior fácilmente, y esconden todos los datos significativos en campos privados.
+
+Ignora ese problema por ahora y asumamos que nuestros objetos se comportan como hippies: prefieren relaciones abiertas y mantienen su estado público. Aunque esta solución resolvería el problema inmediato y te permitiría producir instantáneas de estados de objetos a voluntad, sigue teniendo algunos inconvenientes serios. En el futuro, puede que decidas refactorizar algunas de las clases editoras, o añadir o eliminar algunos de los campos. Parece fácil, pero esto también exige cambiar las clases responsables de copiar el estado de los objetos afectados.
+
