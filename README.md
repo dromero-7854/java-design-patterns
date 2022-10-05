@@ -60,7 +60,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 #### :open\_file\_folder: **middleware**
 
-****:page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
+:page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
 
 :page\_facing\_up: **middleware/ThrottlingMiddleware.java (Comprueba el límite de cantidad de solicitudes)**
 
@@ -74,7 +74,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example" %}
+[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
 
 ## Command
 
@@ -140,7 +140,7 @@ Ahora, para realizar la operación deshacer (undo), la aplicación toma el últi
 
 #### :open\_file\_folder: **commands**
 
-****:page\_facing\_up: **commands/Command.java (Comando base abstracto)**
+:page\_facing\_up: **commands/Command.java (Comando base abstracto)**
 
 :page\_facing\_up: **commands/CopyCommand.java (Copiar el texto seleccionado en el portapapeles)**
 
@@ -156,7 +156,7 @@ Ahora, para realizar la operación deshacer (undo), la aplicación toma el últi
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example" %}
+[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
 
 ## Iterator
 
@@ -204,7 +204,7 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 #### :open\_file\_folder: **iterators**
 
-****:page\_facing\_up: **iterators/ProfileIterator.java (Define la interfaz del iterador)**
+:page\_facing\_up: **iterators/ProfileIterator.java (Define la interfaz del iterador)**
 
 :page\_facing\_up: **iterators/FacebookIterator.java (Implementa la iteración por perfiles de Facebook)**
 
@@ -212,7 +212,7 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 #### :open\_file\_folder: **social\_networks**
 
-****:page\_facing\_up: **social\_networks/SocialNetwork.java (Define una interfaz común de red social)**
+:page\_facing\_up: **social\_networks/SocialNetwork.java (Define una interfaz común de red social)**
 
 :page\_facing\_up: **social\_networks/Facebook.java (Facebook)**
 
@@ -220,15 +220,15 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 #### :open\_file\_folder: **profile**
 
-****:page\_facing\_up: **profile/Profile.java (Perfiles sociales)**
+:page\_facing\_up: **profile/Profile.java (Perfiles sociales)**
 
 #### :open\_file\_folder: **spammer**
 
-****:page\_facing\_up: **spammer/SocialSpammer.java (Aplicación de envío de mensajes)**
+:page\_facing\_up: **spammer/SocialSpammer.java (Aplicación de envío de mensajes)**
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example" %}
+[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
 
 ## Mediator
 
