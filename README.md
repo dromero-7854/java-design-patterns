@@ -358,7 +358,7 @@ Los comandos revertidos se mantienen en el historial hasta que el usuario realic
 
 #### :open\_file\_folder: **editor**
 
-****:page\_facing\_up: **editor/Editor.java (Código del editor)**
+:page\_facing\_up: **editor/Editor.java (Código del editor)**
 
 :page\_facing\_up: **editor/Canvas.java (Código del lienzo)**
 
