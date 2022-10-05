@@ -24,7 +24,7 @@ Durante los meses siguientes, implementas varias de esas comprobaciones secuenci
 * Más tarde, alguien se da cuenta de que el sistema es vulnerable al desciframiento de contraseñas por la fuerza. Para evitarlo, añades rápidamente una comprobación que filtra las solicitudes fallidas repetidas que vengan de la misma dirección IP.
 * Otra persona sugiere que podrías acelerar el sistema devolviendo los resultados en caché en solicitudes repetidas que contengan los mismos datos, de modo que añades otra comprobación que permite a la solicitud pasar por el sistema únicamente cuando no hay una respuesta adecuada en caché.
 
-<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>Cuanto más crece el código, más se complica.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es (1).png" alt=""><figcaption><p>Cuanto más crece el código, más se complica.</p></figcaption></figure>
 
 El código de las comprobaciones, que ya se veía desordenado, se vuelve más y más abotargado cada vez que añades una nueva función. En ocasiones, un cambio en una comprobación afecta a las demás. Y lo peor de todo es que, cuando intentas reutilizar las comprobaciones para proteger otros componentes del sistema, tienes que duplicar parte del código, ya que esos componentes necesitan parte de las comprobaciones, pero no todas ellas.
 
@@ -242,7 +242,7 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 Digamos que tienes un diálogo para crear y editar perfiles de cliente. Consiste en varios controles de formulario, como campos de texto, casillas, botones, etc.
 
-<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption><p>Las relaciones entre los elementos de la interfaz de usuario pueden volverse caóticas cuando la aplicación crece.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1-es (2).png" alt=""><figcaption><p>Las relaciones entre los elementos de la interfaz de usuario pueden volverse caóticas cuando la aplicación crece.</p></figcaption></figure>
 
 Algunos de los elementos del formulario pueden interactuar con otros. Por ejemplo, al seleccionar la casilla “tengo un perro” puede aparecer un campo de texto oculto para introducir el nombre del perro. Otro ejemplo es el botón de envío que tiene que validar los valores de todos los campos antes de guardar la información.
 
@@ -314,9 +314,82 @@ Imagina que estás creando una aplicación de edición de texto. Además de edit
 
 En cierto momento, decides permitir a los usuarios deshacer cualquier operación realizada en el texto. Esta función se ha vuelto tan habitual en los últimos años que hoy en día todo el mundo espera que todas las aplicaciones la tengan. Para la implementación eliges la solución directa. Antes de realizar cualquier operación, la aplicación registra el estado de todos los objetos y lo guarda en un almacenamiento. Más tarde, cuando un usuario decide revertir una acción, la aplicación extrae la última _instantánea_ del historial y la utiliza para restaurar el estado de todos los objetos.
 
-<figure><img src=".gitbook/assets/problem1-es (2).png" alt=""><figcaption><p>Antes de ejecutar una operación, la aplicación guarda una instantánea del estado de los objetos, que más tarde se puede utilizar para restaurar objetos a su estado previo.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption><p>Antes de ejecutar una operación, la aplicación guarda una instantánea del estado de los objetos, que más tarde se puede utilizar para restaurar objetos a su estado previo.</p></figcaption></figure>
 
 Pensemos en estas instantáneas de estado. ¿Cómo producirías una, exactamente? Probablemente tengas que recorrer todos los campos de un objeto y copiar sus valores en el almacenamiento. Sin embargo, esto sólo funcionará si el objeto tiene unas restricciones bastante laxas al acceso a sus contenidos. Lamentablemente, la mayoría de objetos reales no permite a otros asomarse a su interior fácilmente, y esconden todos los datos significativos en campos privados.
 
 Ignora ese problema por ahora y asumamos que nuestros objetos se comportan como hippies: prefieren relaciones abiertas y mantienen su estado público. Aunque esta solución resolvería el problema inmediato y te permitiría producir instantáneas de estados de objetos a voluntad, sigue teniendo algunos inconvenientes serios. En el futuro, puede que decidas refactorizar algunas de las clases editoras, o añadir o eliminar algunos de los campos. Parece fácil, pero esto también exige cambiar las clases responsables de copiar el estado de los objetos afectados.
 
+<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
+
+Pero aún hay más. Pensemos en las propias “instantáneas” del estado del editor. ¿Qué datos contienen? Como mínimo, deben contener el texto, las coordenadas del cursor, la posición actual de desplazamiento, etc. Para realizar una instantánea debes recopilar estos valores y meterlos en algún tipo de contenedor.
+
+Probablemente almacenarás muchos de estos objetos de contenedor dentro de una lista que represente el historial. Por lo tanto, probablemente los contenedores acaben siendo objetos de una clase. La clase no tendrá apenas métodos, pero sí muchos campos que reflejen el estado del editor. Para permitir que otros objetos escriban y lean datos a y desde una instantánea, es probable que tengas que hacer sus campos públicos. Esto expondrá todos los estados del editor, privados o no. Otras clases se volverán dependientes de cada pequeño cambio en la clase de la instantánea, que de otra forma ocurriría dentro de campos y métodos privados sin afectar a clases externas.
+
+Parece que hemos llegado a un callejón sin salida: o bien expones todos los detalles internos de las clases, haciéndolas demasiado frágiles, o restringes el acceso a su estado, haciendo imposible producir instantáneas. ¿Hay alguna otra forma de implementar el "deshacer"?
+
+### Solución <a href="#solution" id="solution"></a>
+
+Todos los problemas que hemos experimentado han sido provocados por una encapsulación fragmentada. Algunos objetos intentan hacer más de lo que deben. Para recopilar los datos necesarios para realizar una acción, invaden el espacio privado de otros objetos en lugar de permitir a esos objetos realizar la propia acción.
+
+<mark style="background-color:yellow;">El patrón Memento delega la creación de instantáneas de estado al propietario de ese estado, el objeto</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">originador</mark>_<mark style="background-color:yellow;">.</mark> Por lo tanto, en lugar de que haya otros objetos intentando copiar el estado del editor desde el “exterior”, la propia clase editora puede hacer la instantánea, ya que tiene pleno acceso a su propio estado.
+
+<mark style="background-color:yellow;">El patrón sugiere almacenar la copia del estado del objeto en un objeto especial llamado</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">memento</mark>_<mark style="background-color:yellow;">. Los contenidos del memento no son accesibles para ningún otro objeto excepto el que lo produjo. Otros objetos deben comunicarse con mementos utilizando una interfaz limitada que pueda permitir extraer los metadatos de la instantánea (tiempo de creación, el nombre de la operación realizada, etc.), pero no el estado del objeto original contenido en la instantánea.</mark>
+
+<figure><img src=".gitbook/assets/solution-es.png" alt=""><figcaption><p>El originador tiene pleno acceso al memento, mientras que el cuidador sólo puede acceder a los metadatos.</p></figcaption></figure>
+
+Una política tan restrictiva te permite almacenar mementos dentro de otros objetos, normalmente llamados _cuidadores_. Debido a que el cuidador trabaja con el memento únicamente a través de la interfaz limitada, no puede manipular el estado almacenado dentro del memento. Al mismo tiempo, el originador tiene acceso a todos los campos dentro del memento, permitiéndole restaurar su estado previo a voluntad.
+
+En nuestro ejemplo del editor de texto, podemos crear una clase separada de historial que actúe como cuidadora. Una pila de mementos almacenados dentro de la cuidadora crecerá cada vez que el editor vaya a ejecutar una operación. Puedes incluso presentar esta pila dentro de la UI de la aplicación, mostrando a un usuario el historial de operaciones previamente realizadas.
+
+Cuando un usuario activa la función Deshacer, el historial toma el memento más reciente de la pila y lo pasa de vuelta al editor, solicitando una restauración. Debido a que el editor tiene pleno acceso al memento, cambia su propio estado con los valores tomados del memento.
+
+## Memento in Java
+
+### Editor de formas y undo/redo complejo <a href="#example-0-title" id="example-0-title"></a>
+
+Este editor gráfico permite cambiar el color y la posición de las formas en pantalla. Cualquier modificación puede deshacerse y repetirse (undo, redo).
+
+El “undo” (deshacer) se basa en la colaboración entre los patrones Memento y Command. El editor rastrea un historial de comandos ejecutados. Antes de ejecutar cualquier comando, realiza una copia de seguridad y la conecta al objeto de comando. Tras la ejecución, empuja el comando ejecutado al historial.
+
+Cuando un usuario solicita deshacer, el editor extrae un comando reciente del historial y restaura el estado desde la copia de seguridad guardada dentro de ese comando. Si el usuario requiere un nuevo undo, el editor extrae el siguiente comando del historial y así sucesivamente.
+
+Los comandos revertidos se mantienen en el historial hasta que el usuario realice modificaciones en las formas en pantalla. Esto es fundamental para rehacer comandos deshechos.
+
+#### :open\_file\_folder: **editor**
+
+****:page\_facing\_up: **editor/Editor.java (Código del editor)**
+
+:page\_facing\_up: **editor/Canvas.java (Código del lienzo)**
+
+#### :open\_file\_folder: **history**
+
+:page\_facing\_up: **history/History.java (El historial almacena comandos y mementos)**
+
+:page\_facing\_up: **history/Memento.java (Clase memento)**
+
+#### :open\_file\_folder: **commands**
+
+:page\_facing\_up: **commands/Command.java (Interfaz comando base)**
+
+:page\_facing\_up: **commands/ColorCommand.java (Cambia el color de la forma seleccionada)**
+
+:page\_facing\_up: **commands/MoveCommand.java (Mueve la forma seleccionada)**
+
+#### :open\_file\_folder: **shapes (**Varias formas**)**
+
+:page\_facing\_up: **shapes/Shape.java**
+
+:page\_facing\_up: **shapes/BaseShape.java**
+
+:page\_facing\_up: **shapes/Circle.java**
+
+:page\_facing\_up: **shapes/Dot.java**
+
+:page\_facing\_up: **shapes/Rectangle.java**
+
+:page\_facing\_up: **shapes/CompoundShape.java**
+
+:page\_facing\_up: **Demo.java (Código de inicialización)**
+
+:link: [Memento in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/memento/example)
