@@ -16,7 +16,7 @@ Imagina que estás trabajando en un sistema de pedidos online. Quieres restringi
 
 Tras planificar un poco, te das cuenta de que estas comprobaciones deben realizarse secuencialmente. La aplicación puede intentar autenticar a un usuario en el sistema cuando reciba una solicitud que contenga las credenciales del usuario. Sin embargo, si esas credenciales no son correctas y la autenticación falla, no hay razón para proceder con otras comprobaciones.
 
-<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1-es (1).png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
 
 Durante los meses siguientes, implementas varias de esas comprobaciones secuenciales.
 
@@ -46,7 +46,7 @@ No obstante, hay una solución ligeramente diferente (y un poco más estandariza
 
 Por ejemplo, cuando un usuario hace clic en un botón, el evento se propaga por la cadena de elementos GUI que comienza en el botón, recorre sus contenedores (como formularios o paneles) y acaba en la ventana principal de la aplicación. El evento es procesado por el primer elemento de la cadena que es capaz de gestionarlo. Este ejemplo también es destacable porque muestra que siempre se puede extraer una cadena de un árbol de objetos.
 
-<figure><img src=".gitbook/assets/solution2-es (1).png" alt=""><figcaption><p>Una cadena puede formarse a partir de una rama de un árbol de objetos.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/solution2-es (3).png" alt=""><figcaption><p>Una cadena puede formarse a partir de una rama de un árbol de objetos.</p></figcaption></figure>
 
 Es fundamental que todas las clases manejadoras implementen la misma interfaz. Cada manejadora concreta solo debe preocuparse por la siguiente que cuente con el método `ejecutar`. De esta forma puedes componer cadenas durante el tiempo de ejecución, utilizando varios manejadores sin acoplar tu código a sus clases concretas.
 
@@ -58,7 +58,23 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-[Link text Here](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
+#### :open\_file\_folder: **middleware**
+
+****:page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
+
+:page\_facing\_up: **middleware/ThrottlingMiddleware.java (Comprueba el límite de cantidad de solicitudes)**
+
+:page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba las credenciales del usuario)**
+
+:page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba el papel del usuario)**
+
+#### :open\_file\_folder: **server**
+
+:page\_facing\_up: **server/Server.java (Objetivo de la autorización)**
+
+:page\_facing\_up: **Demo.java (Código cliente)**
+
+{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example" %}
 
 ## Command
 
@@ -76,7 +92,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src=".gitbook/assets/problem2 (1) (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -122,6 +138,24 @@ El editor de texto de este ejemplo crea nuevos objetos de comando cada vez que u
 
 Ahora, para realizar la operación deshacer (undo), la aplicación toma el último comando ejecutado del historial y, o bien realiza una acción inversa, o bien restaura el pasado estado del editor guardado por ese comando.
 
+#### :open\_file\_folder: **commands**
+
+****:page\_facing\_up: **commands/Command.java (Comando base abstracto)**
+
+:page\_facing\_up: **commands/CopyCommand.java (Copiar el texto seleccionado en el portapapeles)**
+
+:page\_facing\_up: **commands/PasteCommand.java (Pegar texto desde el portapapeles)**
+
+:page\_facing\_up: **commands/CutCommand.java (Cortar texto al portapapeles)**
+
+:page\_facing\_up: **commands/CommandHistory.java (Historial del comando)**
+
+#### :open\_file\_folder: **editor**
+
+:page\_facing\_up: **editor/Editor.java (GUI del editor de texto)**
+
+:page\_facing\_up: **Demo.java (Código cliente)**
+
 {% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example" %}
 
 ## Iterator
@@ -152,7 +186,7 @@ Por otro lado, el código cliente que debe funcionar con varias colecciones pued
 
 ### Solución
 
-<mark style="background-color:yellow;">La idea central del patrón Iterator es extraer el comportamiento de recorrido de una colección y colocarlo en un objeto independiente llamado</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">iterador</mark>_<mark style="background-color:yellow;">.</mark>
+<mark style="background-color:yellow;">La idea central del patrón Iterator es extraer el comportamiento de recorrido de una colección y colocarlo en un objeto independiente llamado</mark> _<mark style="background-color:yellow;">iterador</mark>_<mark style="background-color:yellow;">.</mark>
 
 <figure><img src=".gitbook/assets/solution1.png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
 
@@ -168,4 +202,44 @@ Todos los iteradores deben implementar la misma interfaz. Esto hace que el códi
 
 En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales de una colección remota de una red social, sin exponer los detalles de la comunicación al código cliente.
 
+#### :open\_file\_folder: **iterators**
+
+****:page\_facing\_up: **iterators/ProfileIterator.java (Define la interfaz del iterador)**
+
+:page\_facing\_up: **iterators/FacebookIterator.java (Implementa la iteración por perfiles de Facebook)**
+
+:page\_facing\_up: **iterators/LinkedInIterator.java (Implementa la iteración por perfiles de LinkedIn)**
+
+#### :open\_file\_folder: **social\_networks**
+
+****:page\_facing\_up: **social\_networks/SocialNetwork.java (Define una interfaz común de red social)**
+
+:page\_facing\_up: **social\_networks/Facebook.java (Facebook)**
+
+:page\_facing\_up: **social\_networks/LinkedIn.java (LinkedIn)**
+
+#### :open\_file\_folder: **profile**
+
+****:page\_facing\_up: **profile/Profile.java (Perfiles sociales)**
+
+#### :open\_file\_folder: **spammer**
+
+****:page\_facing\_up: **spammer/SocialSpammer.java (Aplicación de envío de mensajes)**
+
+:page\_facing\_up: **Demo.java (Código cliente)**
+
 {% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example" %}
+
+## Mediator
+
+### Propósito <a href="#intent" id="intent"></a>
+
+<mark style="background-color:yellow;">**Mediator**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite reducir las dependencias caóticas entre objetos. El patrón restringe las comunicaciones directas entre los objetos, forzándolos a colaborar únicamente a través de un objeto mediador.</mark>
+
+<figure><img src=".gitbook/assets/mediator.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Digamos que tienes un diálogo para crear y editar perfiles de cliente. Consiste en varios controles de formulario, como campos de texto, casillas, botones, etc.
+
+<figure><img src=".gitbook/assets/problem1-es.png" alt=""><figcaption></figcaption></figure>
