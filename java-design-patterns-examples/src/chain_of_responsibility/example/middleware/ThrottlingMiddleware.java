@@ -22,6 +22,7 @@ public class ThrottlingMiddleware extends Middleware {
 	 * objects. For instance, an element of a chain can change the order of
 	 * checks by running its check after all other checks.
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean check(String email, String password) {
 		if (System.currentTimeMillis() > currentTime + 60_000) {
 			request = 0;
