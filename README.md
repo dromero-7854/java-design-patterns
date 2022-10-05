@@ -58,7 +58,7 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-#### :open\_file\_folder: **middleware**
+:open\_file\_folder: **middleware**
 
 :page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
 
@@ -68,7 +68,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 :page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba el papel del usuario)**
 
-#### :open\_file\_folder: **server**
+:open\_file\_folder: **server**
 
 :page\_facing\_up: **server/Server.java (Objetivo de la autorización)**
 
@@ -138,7 +138,7 @@ El editor de texto de este ejemplo crea nuevos objetos de comando cada vez que u
 
 Ahora, para realizar la operación deshacer (undo), la aplicación toma el último comando ejecutado del historial y, o bien realiza una acción inversa, o bien restaura el pasado estado del editor guardado por ese comando.
 
-#### :open\_file\_folder: **commands**
+:open\_file\_folder: **commands**
 
 :page\_facing\_up: **commands/Command.java (Comando base abstracto)**
 
@@ -150,7 +150,7 @@ Ahora, para realizar la operación deshacer (undo), la aplicación toma el últi
 
 :page\_facing\_up: **commands/CommandHistory.java (Historial del comando)**
 
-#### :open\_file\_folder: **editor**
+:open\_file\_folder: **editor**
 
 :page\_facing\_up: **editor/Editor.java (GUI del editor de texto)**
 
@@ -202,7 +202,7 @@ Todos los iteradores deben implementar la misma interfaz. Esto hace que el códi
 
 En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales de una colección remota de una red social, sin exponer los detalles de la comunicación al código cliente.
 
-#### :open\_file\_folder: **iterators**
+:open\_file\_folder: **iterators**
 
 :page\_facing\_up: **iterators/ProfileIterator.java (Define la interfaz del iterador)**
 
@@ -210,7 +210,7 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 :page\_facing\_up: **iterators/LinkedInIterator.java (Implementa la iteración por perfiles de LinkedIn)**
 
-#### :open\_file\_folder: **social\_networks**
+:open\_file\_folder: **social\_networks**
 
 :page\_facing\_up: **social\_networks/SocialNetwork.java (Define una interfaz común de red social)**
 
@@ -218,11 +218,11 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 :page\_facing\_up: **social\_networks/LinkedIn.java (LinkedIn)**
 
-#### :open\_file\_folder: **profile**
+:open\_file\_folder: **profile**
 
 :page\_facing\_up: **profile/Profile.java (Perfiles sociales)**
 
-#### :open\_file\_folder: **spammer**
+:open\_file\_folder: **spammer**
 
 :page\_facing\_up: **spammer/SocialSpammer.java (Aplicación de envío de mensajes)**
 
@@ -270,7 +270,7 @@ De este modo, el patrón Mediator te permite encapsular una compleja red de rela
 
 Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con la ayuda de un mediador sin que dependan los unos de los otros.
 
-#### :open\_file\_folder: **components (Clases colegas)**
+:open\_file\_folder: **components (Clases colegas)**
 
 :page\_facing\_up: **components/Component.java**
 
@@ -288,7 +288,7 @@ Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con 
 
 :page\_facing\_up: **components/Title.java**
 
-#### :open\_file\_folder: **mediator**
+:open\_file\_folder: **mediator**
 
 :page\_facing\_up: **mediator/Mediator.java (Define la interfaz mediadora común)**
 
@@ -356,19 +356,19 @@ Cuando un usuario solicita deshacer, el editor extrae un comando reciente del hi
 
 Los comandos revertidos se mantienen en el historial hasta que el usuario realice modificaciones en las formas en pantalla. Esto es fundamental para rehacer comandos deshechos.
 
-#### :open\_file\_folder: **editor**
+:open\_file\_folder: **editor**
 
 :page\_facing\_up: **editor/Editor.java (Código del editor)**
 
 :page\_facing\_up: **editor/Canvas.java (Código del lienzo)**
 
-#### :open\_file\_folder: **history**
+:open\_file\_folder: **history**
 
 :page\_facing\_up: **history/History.java (El historial almacena comandos y mementos)**
 
 :page\_facing\_up: **history/Memento.java (Clase memento)**
 
-#### :open\_file\_folder: **commands**
+:open\_file\_folder: **commands**
 
 :page\_facing\_up: **commands/Command.java (Interfaz comando base)**
 
@@ -376,7 +376,7 @@ Los comandos revertidos se mantienen en el historial hasta que el usuario realic
 
 :page\_facing\_up: **commands/MoveCommand.java (Mueve la forma seleccionada)**
 
-#### :open\_file\_folder: **shapes (Varias formas)**
+:open\_file\_folder: **shapes (Varias formas)**
 
 :page\_facing\_up: **shapes/Shape.java**
 
