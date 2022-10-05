@@ -58,7 +58,7 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-{% embed url="https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example" %}
+[Link text Here](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
 
 ## Command
 
