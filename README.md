@@ -50,7 +50,7 @@ Por ejemplo, cuando un usuario hace clic en un botón, el evento se propaga por 
 
 Es fundamental que todas las clases manejadoras implementen la misma interfaz. Cada manejadora concreta solo debe preocuparse por la siguiente que cuente con el método `ejecutar`. De esta forma puedes componer cadenas durante el tiempo de ejecución, utilizando varios manejadores sin acoplar tu código a sus clases concretas.
 
-## **Chain of Responsibility** in Java
+## Chain of Responsibility in Java
 
 ### Acceso filtrado <a href="#example-0-title" id="example-0-title"></a>
 
@@ -74,7 +74,7 @@ Este ejemplo es un poco diferente de la versión estándar del patrón estableci
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
+[Chain of Responsibility in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain_of_responsibility/example)
 
 ## Command
 
@@ -156,7 +156,7 @@ Ahora, para realizar la operación deshacer (undo), la aplicación toma el últi
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
+[Command in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
 
 ## Iterator
 
@@ -228,7 +228,7 @@ En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales 
 
 :page\_facing\_up: **Demo.java (Código cliente)**
 
-[Links](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
+[Iterator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
 
 ## Mediator
 
