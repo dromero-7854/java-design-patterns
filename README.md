@@ -46,7 +46,7 @@ No obstante, hay una solución ligeramente diferente (y un poco más estandariza
 
 Por ejemplo, cuando un usuario hace clic en un botón, el evento se propaga por la cadena de elementos GUI que comienza en el botón, recorre sus contenedores (como formularios o paneles) y acaba en la ventana principal de la aplicación. El evento es procesado por el primer elemento de la cadena que es capaz de gestionarlo. Este ejemplo también es destacable porque muestra que siempre se puede extraer una cadena de un árbol de objetos.
 
-<figure><img src=".gitbook/assets/solution2-es (3).png" alt=""><figcaption><p>Una cadena puede formarse a partir de una rama de un árbol de objetos.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/solution2-es (1) (1) (3).png" alt=""><figcaption><p>Una cadena puede formarse a partir de una rama de un árbol de objetos.</p></figcaption></figure>
 
 Es fundamental que todas las clases manejadoras implementen la misma interfaz. Cada manejadora concreta solo debe preocuparse por la siguiente que cuente con el método `ejecutar`. De esta forma puedes componer cadenas durante el tiempo de ejecución, utilizando varios manejadores sin acoplar tu código a sus clases concretas.
 
@@ -92,7 +92,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src=".gitbook/assets/problem2 (1) (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2 (1) (2).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -320,7 +320,7 @@ Pensemos en estas instantáneas de estado. ¿Cómo producirías una, exactamente
 
 Ignora ese problema por ahora y asumamos que nuestros objetos se comportan como hippies: prefieren relaciones abiertas y mantienen su estado público. Aunque esta solución resolvería el problema inmediato y te permitiría producir instantáneas de estados de objetos a voluntad, sigue teniendo algunos inconvenientes serios. En el futuro, puede que decidas refactorizar algunas de las clases editoras, o añadir o eliminar algunos de los campos. Parece fácil, pero esto también exige cambiar las clases responsables de copiar el estado de los objetos afectados.
 
-<figure><img src=".gitbook/assets/problem2-es (2).png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
 
 Pero aún hay más. Pensemos en las propias “instantáneas” del estado del editor. ¿Qué datos contienen? Como mínimo, deben contener el texto, las coordenadas del cursor, la posición actual de desplazamiento, etc. Para realizar una instantánea debes recopilar estos valores y meterlos en algún tipo de contenedor.
 
@@ -392,4 +392,4 @@ Los comandos revertidos se mantienen en el historial hasta que el usuario realic
 
 :page\_facing\_up: **Demo.java (Código de inicialización)**
 
-:link: [Memento in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/memento/example)
+:link: [Memento in JAVA](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/memento/example)
