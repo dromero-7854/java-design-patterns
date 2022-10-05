@@ -92,7 +92,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src=".gitbook/assets/problem2 (1) (2).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2 (1) (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -298,13 +298,13 @@ Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con 
 
 :page\_facing\_up: **Demo.java (Código de inicialización)**
 
-:link: [Mediator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
+:link: [Mediator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/mediator/example)
 
 ## Memento
 
 ### Propósito <a href="#intent" id="intent"></a>
 
-<mark style="background-color:yellow;">**Memento**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite guardar y restaurar el estado previo de un objeto sin revelar los detalles de su implementación.</mark>
+<mark style="background-color:yellow;">**Memento**</mark> <mark style="background-color:yellow;">es un patrón de diseño de comportamiento que te permite guardar y restaurar el estado previo de un objeto sin revelar los detalles de su implementación.</mark>
 
 <figure><img src=".gitbook/assets/memento-es.png" alt=""><figcaption></figcaption></figure>
 
@@ -320,7 +320,7 @@ Pensemos en estas instantáneas de estado. ¿Cómo producirías una, exactamente
 
 Ignora ese problema por ahora y asumamos que nuestros objetos se comportan como hippies: prefieren relaciones abiertas y mantienen su estado público. Aunque esta solución resolvería el problema inmediato y te permitiría producir instantáneas de estados de objetos a voluntad, sigue teniendo algunos inconvenientes serios. En el futuro, puede que decidas refactorizar algunas de las clases editoras, o añadir o eliminar algunos de los campos. Parece fácil, pero esto también exige cambiar las clases responsables de copiar el estado de los objetos afectados.
 
-<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es (2).png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
 
 Pero aún hay más. Pensemos en las propias “instantáneas” del estado del editor. ¿Qué datos contienen? Como mínimo, deben contener el texto, las coordenadas del cursor, la posición actual de desplazamiento, etc. Para realizar una instantánea debes recopilar estos valores y meterlos en algún tipo de contenedor.
 
@@ -332,9 +332,9 @@ Parece que hemos llegado a un callejón sin salida: o bien expones todos los det
 
 Todos los problemas que hemos experimentado han sido provocados por una encapsulación fragmentada. Algunos objetos intentan hacer más de lo que deben. Para recopilar los datos necesarios para realizar una acción, invaden el espacio privado de otros objetos en lugar de permitir a esos objetos realizar la propia acción.
 
-<mark style="background-color:yellow;">El patrón Memento delega la creación de instantáneas de estado al propietario de ese estado, el objeto</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">originador</mark>_<mark style="background-color:yellow;">.</mark> Por lo tanto, en lugar de que haya otros objetos intentando copiar el estado del editor desde el “exterior”, la propia clase editora puede hacer la instantánea, ya que tiene pleno acceso a su propio estado.
+<mark style="background-color:yellow;">El patrón Memento delega la creación de instantáneas de estado al propietario de ese estado, el objeto</mark> _<mark style="background-color:yellow;">originador</mark>_<mark style="background-color:yellow;">.</mark> Por lo tanto, en lugar de que haya otros objetos intentando copiar el estado del editor desde el “exterior”, la propia clase editora puede hacer la instantánea, ya que tiene pleno acceso a su propio estado.
 
-<mark style="background-color:yellow;">El patrón sugiere almacenar la copia del estado del objeto en un objeto especial llamado</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">memento</mark>_<mark style="background-color:yellow;">. Los contenidos del memento no son accesibles para ningún otro objeto excepto el que lo produjo. Otros objetos deben comunicarse con mementos utilizando una interfaz limitada que pueda permitir extraer los metadatos de la instantánea (tiempo de creación, el nombre de la operación realizada, etc.), pero no el estado del objeto original contenido en la instantánea.</mark>
+<mark style="background-color:yellow;">El patrón sugiere almacenar la copia del estado del objeto en un objeto especial llamado</mark> _<mark style="background-color:yellow;">memento</mark>_<mark style="background-color:yellow;">. Los contenidos del memento no son accesibles para ningún otro objeto excepto el que lo produjo. Otros objetos deben comunicarse con mementos utilizando una interfaz limitada que pueda permitir extraer los metadatos de la instantánea (tiempo de creación, el nombre de la operación realizada, etc.), pero no el estado del objeto original contenido en la instantánea.</mark>
 
 <figure><img src=".gitbook/assets/solution-es.png" alt=""><figcaption><p>El originador tiene pleno acceso al memento, mientras que el cuidador sólo puede acceder a los metadatos.</p></figcaption></figure>
 
@@ -376,7 +376,7 @@ Los comandos revertidos se mantienen en el historial hasta que el usuario realic
 
 :page\_facing\_up: **commands/MoveCommand.java (Mueve la forma seleccionada)**
 
-#### :open\_file\_folder: **shapes (**Varias formas**)**
+#### :open\_file\_folder: **shapes (Varias formas)**
 
 :page\_facing\_up: **shapes/Shape.java**
 
