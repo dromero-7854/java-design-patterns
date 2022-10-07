@@ -58,21 +58,15 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-:open\_file\_folder: **middleware**
-
-:page\_facing\_up: **middleware/Middleware.java (Interfaz de validación básica)**
-
-:page\_facing\_up: **middleware/ThrottlingMiddleware.java (Comprueba el límite de cantidad de solicitudes)**
-
-:page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba las credenciales del usuario)**
-
-:page\_facing\_up: **middleware/UserExistsMiddleware.java (Comprueba el papel del usuario)**
-
-:open\_file\_folder: **server**
-
-:page\_facing\_up: **server/Server.java (Objetivo de la autorización)**
-
-:page\_facing\_up: **Demo.java (Código cliente)**
+<pre><code><strong>chain_of_responsibility
+</strong>├── middleware
+│   ├── Middleware.java (Interfaz de validación básica)
+│   ├── ThrottlingMiddleware.java (Comprueba el límite de cantidad de solicitudes)
+│   ├── UserExistsMiddleware.java (Comprueba las credenciales del usuario)
+│   └── UserExistsMiddleware.java (Comprueba el papel del usuario)
+├── server
+│   └── Server.java (Objetivo de la autorización)
+└── Demo.java (Código cliente)</code></pre>
 
 :link: [Chain of Responsibility in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
 
