@@ -50,6 +50,16 @@ Por ejemplo, cuando un usuario hace clic en un botón, el evento se propaga por 
 
 Es fundamental que todas las clases manejadoras implementen la misma interfaz. Cada manejadora concreta solo debe preocuparse por la siguiente que cuente con el método `ejecutar`. De esta forma puedes componer cadenas durante el tiempo de ejecución, utilizando varios manejadores sin acoplar tu código a sus clases concretas.
 
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes controlar el orden de control de solicitudes.
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes desacoplar las clases que invoquen operaciones de las que realicen operaciones.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevos manejadores en la aplicación sin descomponer el código cliente existente.
+
+:heavy\_multiplication\_x:  Algunas solicitudes pueden acabar sin ser gestionadas.
+
 ## Chain of Responsibility in Java
 
 ### Acceso filtrado <a href="#example-0-title" id="example-0-title"></a>
@@ -126,6 +136,20 @@ Otros elementos GUI, como menús, atajos o diálogos enteros, se pueden implemen
 
 <mark style="background-color:yellow;">Como resultado, los comandos se convierten en una conveniente capa intermedia que reduce el acoplamiento entre las capas de la GUI y la lógica de negocio.</mark> ¡Y esto es tan solo una fracción de las ventajas que ofrece el patrón Command!
 
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes desacoplar las clases que invocan operaciones de las que realizan esas operaciones.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevos comandos en la aplicación sin descomponer el código cliente existente.
+
+:heavy\_check\_mark:  Puedes implementar deshacer/rehacer.
+
+:heavy\_check\_mark:  Puedes implementar la ejecución diferida de operaciones.
+
+:heavy\_check\_mark:  Puedes ensamblar un grupo de comandos simples para crear uno complejo.
+
+:heavy\_multiplication\_x:  El código puede complicarse, ya que estás introduciendo una nueva capa entre emisores y receptores.
+
 ## Command in Java
 
 ### Comandos de editor de texto y deshacer <a href="#example-0-title" id="example-0-title"></a>
@@ -187,6 +211,20 @@ Normalmente, los iteradores aportan un método principal para extraer elementos 
 
 Todos los iteradores deben implementar la misma interfaz. Esto hace que el código cliente sea compatible con cualquier tipo de colección o cualquier algoritmo de recorrido, siempre y cuando exista un iterador adecuado. Si necesitas una forma particular de recorrer una colección, creas una nueva clase iteradora sin tener que cambiar la colección o el cliente.
 
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes limpiar el código cliente y las colecciones extrayendo algoritmos de recorrido voluminosos y colocándolos en clases independientes.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes implementar nuevos tipos de colecciones e iteradores y pasarlos al código existente sin descomponer nada.
+
+:heavy\_check\_mark:  Puedes recorrer la misma colección en paralelo porque cada objeto iterador contiene su propio estado de iteración.
+
+:heavy\_check\_mark:  Por la misma razón, puedes retrasar una iteración y continuar cuando sea necesario.
+
+:heavy\_multiplication\_x:  Aplicar el patrón puede resultar excesivo si tu aplicación funciona únicamente con colecciones sencillas.
+
+:heavy\_multiplication\_x:  Utilizar un iterador puede ser menos eficiente que recorrer directamente los elementos de algunas colecciones especializadas.
+
 ## Iterator in Java
 
 ### Iteración en perfiles de redes sociales <a href="#example-0-title" id="example-0-title"></a>
@@ -245,6 +283,18 @@ El cambio más significativo lo sufren los propios elementos del formulario. Pen
 Puedes ir más lejos y reducir en mayor medida la dependencia extrayendo la interfaz común para todos los tipos de diálogo. La interfaz declarará el método de notificación que pueden utilizar todos los elementos del formulario para notificar al diálogo sobre los eventos que le suceden a estos elementos. Por lo tanto, ahora nuestro botón de envío debería poder funcionar con cualquier diálogo que implemente esa interfaz.
 
 De este modo, el patrón Mediator te permite encapsular una compleja red de relaciones entre varios objetos dentro de un único objeto mediador. Cuantas menos dependencias tenga una clase, más fácil es modificar, extender o reutilizar esa clase.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes extraer las comunicaciones entre varios componentes dentro de un único sitio, haciéndolo más fácil de comprender y mantener.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevos mediadores sin tener que cambiar los propios componentes.
+
+:heavy\_check\_mark:  Puedes reducir el acoplamiento entre varios componentes de un programa.
+
+:heavy\_check\_mark:  Puedes reutilizar componentes individuales con mayor facilidad.
+
+:heavy\_multiplication\_x:  Con el tiempo, un mediador puede evolucionar a un **objeto todopoderoso** (en inglés God Object) Es un objeto que conoce demasiado o hace demasiado. El objeto todopoderoso es un ejemplo de un anti-patrón.
 
 ## Mediator in Java
 
@@ -315,6 +365,18 @@ Una política tan restrictiva te permite almacenar mementos dentro de otros obje
 En nuestro ejemplo del editor de texto, podemos crear una clase separada de historial que actúe como cuidadora. Una pila de mementos almacenados dentro de la cuidadora crecerá cada vez que el editor vaya a ejecutar una operación. Puedes incluso presentar esta pila dentro de la UI de la aplicación, mostrando a un usuario el historial de operaciones previamente realizadas.
 
 Cuando un usuario activa la función Deshacer, el historial toma el memento más reciente de la pila y lo pasa de vuelta al editor, solicitando una restauración. Debido a que el editor tiene pleno acceso al memento, cambia su propio estado con los valores tomados del memento.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes producir instantáneas del estado del objeto sin violar su encapsulación.
+
+:heavy\_check\_mark:  Puedes simplificar el código de la originadora permitiendo que la cuidadora mantenga el historial del estado de la originadora.
+
+:heavy\_multiplication\_x:  La aplicación puede consumir mucha memoria RAM si los clientes crean mementos muy a menudo.
+
+:heavy\_multiplication\_x:  Las cuidadoras deben rastrear el ciclo de vida de la originadora para poder destruir mementos obsoletos.
+
+:heavy\_multiplication\_x:  La mayoría de los lenguajes de programación dinámicos, como PHP, Python y JavaScript, no pueden garantizar que el estado dentro del memento se mantenga intacto.
 
 ## Memento in Java
 
@@ -390,6 +452,14 @@ Por eso es fundamental que todos los suscriptores implementen la misma interfaz 
 <figure><img src=".gitbook/assets/solution2-es.png" alt=""><figcaption><p>El notificador notifica a los suscriptores invocando el método de notificación específico de sus objetos.</p></figcaption></figure>
 
 Si tu aplicación tiene varios tipos diferentes de notificadores y quieres hacer a tus suscriptores compatibles con todos ellos, puedes ir más allá y hacer que todos los notificadores sigan la misma interfaz. Esta interfaz sólo tendrá que describir algunos métodos de suscripción. La interfaz permitirá a los suscriptores observar los estados de los notificadores sin acoplarse a sus clases concretas.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevas clases suscriptoras sin tener que cambiar el código de la notificadora (y viceversa si hay una interfaz notificadora)
+
+:heavy\_check\_mark:  Puedes establecer relaciones entre objetos durante el tiempo de ejecución.
+
+:heavy\_multiplication\_x:  Los suscriptores son notificados en un orden aleatorio.
 
 ## Observer in Java
 
@@ -474,6 +544,16 @@ En lugar de implementar todos los comportamientos por su cuenta, el objeto origi
 Para la transición del contexto a otro estado, sustituye el objeto de estado activo por otro objeto que represente ese nuevo estado. Esto sólo es posible si todas las clases de estado siguen la misma interfaz y el propio contexto funciona con esos objetos a través de esa interfaz.
 
 Esta estructura puede resultar similar al patrón **Strategy**, pero hay una diferencia clave. En el patrón State, los estados particulares pueden conocerse entre sí e iniciar transiciones de un estado a otro, mientras que las estrategias casi nunca se conocen.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Organiza el código relacionado con estados particulares en clases separadas.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Introduce nuevos estados sin cambiar clases de estado existentes o la clase contexto.
+
+:heavy\_check\_mark:  Simplifica el código del contexto eliminando voluminosos condicionales de máquina de estados.
+
+:heavy\_multiplication\_x:  Aplicar el patrón puede resultar excesivo si una máquina de estados sólo tiene unos pocos estados o raramente cambia.
 
 ## State in Java
 
