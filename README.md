@@ -495,3 +495,70 @@ state
 ```
 
 :link: [State in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/state/example)
+
+## Strategy
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Strategy** es un patrón de diseño de comportamiento que te permite definir una familia de algoritmos, colocar cada uno de ellos en una clase separada y hacer sus objetos intercambiables.
+
+<figure><img src=".gitbook/assets/strategy.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Un día decidiste crear una aplicación de navegación para viajeros ocasionales. La aplicación giraba alrededor de un bonito mapa que ayudaba a los usuarios a orientarse rápidamente en cualquier ciudad.
+
+Una de las funciones más solicitadas para la aplicación era la planificación automática de rutas. Un usuario debía poder introducir una dirección y ver la ruta más rápida a ese destino mostrado en el mapa.
+
+La primera versión de la aplicación sólo podía generar las rutas sobre carreteras. Las personas que viajaban en coche estaban locas de alegría. Pero, aparentemente, no a todo el mundo le gusta conducir durante sus vacaciones. De modo que, en la siguiente actualización, añadiste una opción para crear rutas a pie. Después, añadiste otra opción para permitir a las personas utilizar el transporte público en sus rutas.
+
+Sin embargo, esto era sólo el principio. Más tarde planeaste añadir la generación de rutas para ciclistas, y más tarde, otra opción para trazar rutas por todas las atracciones turísticas de una ciudad.
+
+<figure><img src=".gitbook/assets/problem.png" alt=""><figcaption><p>El código del navegador se saturó.</p></figcaption></figure>
+
+Aunque desde una perspectiva comercial la aplicación era un éxito, la parte técnica provocaba muchos dolores de cabeza. Cada vez que añadías un nuevo algoritmo de enrutamiento, la clase principal del navegador doblaba su tamaño. En cierto momento, la bestia se volvió demasiado difícil de mantener.
+
+Cualquier cambio en alguno de los algoritmos, ya fuera un sencillo arreglo de un error o un ligero ajuste de la representación de la calle, afectaba a toda la clase, aumentando las probabilidades de crear un error en un código ya funcional.
+
+Además, el trabajo en equipo se volvió ineficiente. Tus compañeros, contratados tras el exitoso lanzamiento, se quejaban de que dedicaban demasiado tiempo a resolver conflictos de integración. Implementar una nueva función te exige cambiar la misma clase enorme, entrando en conflicto con el código producido por otras personas.
+
+### Solución <a href="#solution" id="solution"></a>
+
+<mark style="background-color:yellow;">El patrón Strategy sugiere que tomes esa clase que hace algo específico de muchas formas diferentes y extraigas todos esos algoritmos para colocarlos en clases separadas llamadas</mark> <mark style="background-color:yellow;"></mark>_<mark style="background-color:yellow;">estrategias</mark>_<mark style="background-color:yellow;">.</mark>
+
+La clase original, llamada _contexto_, debe tener un campo para almacenar una referencia a una de las estrategias. El contexto delega el trabajo a un objeto de estrategia vinculado en lugar de ejecutarlo por su cuenta.
+
+La clase contexto no es responsable de seleccionar un algoritmo adecuado para la tarea. En lugar de eso, el cliente pasa la estrategia deseada a la clase contexto. De hecho, la clase contexto no sabe mucho acerca de las estrategias. Funciona con todas las estrategias a través de la misma interfaz genérica, que sólo expone un único método para disparar el algoritmo encapsulado dentro de la estrategia seleccionada.
+
+De esta forma, el contexto se vuelve independiente de las estrategias concretas, así que puedes añadir nuevos algoritmos o modificar los existentes sin cambiar el código de la clase contexto o de otras estrategias.
+
+<figure><img src=".gitbook/assets/solution.png" alt=""><figcaption><p>Estrategias de planificación de rutas.</p></figcaption></figure>
+
+En nuestra aplicación de navegación, cada algoritmo de enrutamiento puede extraerse y ponerse en su propia clase con un único método `crearRuta`. El método acepta un origen y un destino y devuelve una colección de puntos de control de la ruta.
+
+Incluso contando con los mismos argumentos, cada clase de enrutamiento puede crear una ruta diferente. A la clase navegadora principal no le importa qué algoritmo se selecciona ya que su labor principal es representar un grupo de puntos de control en el mapa. La clase tiene un método para cambiar la estrategia activa de enrutamiento, de modo que sus clientes, como los botones en la interfaz de usuario, pueden sustituir el comportamiento seleccionado de enrutamiento por otro.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark: Puedes intercambiar algoritmos usados dentro de un objeto durante el tiempo de ejecución.
+
+:heavy\_check\_mark:Puedes aislar los detalles de implementación de un algoritmo del código que lo utiliza.
+
+:heavy\_check\_mark:Puedes sustituir la herencia por composición.
+
+:heavy\_check\_mark:Principio de abierto/cerrado. Puedes introducir nuevas estrategias sin tener que cambiar el contexto.
+
+:heavy\_multiplication\_x:Si sólo tienes un par de algoritmos que raramente cambian, no hay una razón real para complicar el programa en exceso con nuevas clases e interfaces que vengan con el patrón.
+
+:heavy\_multiplication\_x:Los clientes deben conocer las diferencias entre estrategias para poder seleccionar la adecuada.
+
+:heavy\_multiplication\_x:Muchos lenguajes de programación modernos tienen un soporte de tipo funcional que te permite implementar distintas versiones de un algoritmo dentro de un grupo de funciones anónimas. Entonces puedes utilizar estas funciones exactamente como habrías utilizado los objetos de estrategia, pero sin saturar tu código con clases e interfaces adicionales.
+
+## Strategy in Java
+
+### Medio de pago en una aplicación de comercio electrónico <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón Strategy se utiliza para implementar los distintos medios de pago de una aplicación de comercio electrónico. Una vez seleccionado el producto a comprar, un cliente elige un medio de pago: Paypal o tarjeta de crédito.
+
+Las estrategias concretas no solo realizan el propio pago, sino que además alteran el comportamiento del formulario de pago, proporcionando campos adecuados para el registro de los datos del pago.
+
