@@ -413,3 +413,85 @@ observer
 ```
 
 :link:[Observer in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
+
+## State
+
+### Propósito <a href="#intent" id="intent"></a>
+
+<mark style="background-color:yellow;">**State**</mark> <mark style="background-color:yellow;"></mark><mark style="background-color:yellow;">es un patrón de diseño de comportamiento que permite a un objeto alterar su comportamiento cuando su estado interno cambia. Parece como si el objeto cambiara su clase.</mark>
+
+<figure><img src=".gitbook/assets/state-es (1).png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+El patrón State está estrechamente relacionado con el concepto de la _**Máquina de estados finitos**_.
+
+<figure><img src=".gitbook/assets/problem1 (1).png" alt=""><figcaption><p>Máquina de estados finitos.</p></figcaption></figure>
+
+La idea principal es que, en cualquier momento dado, un programa puede encontrarse en un número _finito_ de _estados_. Dentro de cada estado único, el programa se comporta de forma diferente y puede cambiar de un estado a otro instantáneamente. Sin embargo, dependiendo de un estado actual, el programa puede cambiar o no a otros estados. Estas normas de cambio llamadas _transiciones_ también son finitas y predeterminadas.
+
+También puedes aplicar esta solución a los objetos. Imagina que tienes una clase `Documento`. Un documento puede encontrarse en uno de estos tres estados: `Borrador`, `Moderación` y `Publicado`. El método `publicar` del documento funciona de forma ligeramente distinta en cada estado:
+
+* En `Borrador`, mueve el documento a moderación.
+* En `Moderación`, hace público el documento, pero sólo si el usuario actual es un administrador.
+* En `Publicado`, no hace nada en absoluto.
+
+<figure><img src=".gitbook/assets/problem2-es (3).png" alt=""><figcaption><p>Posibles estados y transiciones de un objeto de documento.</p></figcaption></figure>
+
+Las máquinas de estado se implementan normalmente con muchos operadores condicionales (`if` o `switch`) que seleccionan el comportamiento adecuado dependiendo del estado actual del objeto. Normalmente, este “estado” es tan solo un grupo de valores de los campos del objeto. Aunque nunca hayas oído hablar de máquinas de estados finitos, probablemente hayas implementado un estado al menos alguna vez. ¿Te suena esta estructura de código?
+
+```java
+class Document is
+    field state: string
+    // ...
+    method publish() is
+        switch (state)
+            "draft":
+                state = "moderation"
+                break
+            "moderation":
+                if (currentUser.role == "admin")
+                    state = "published"
+                break
+            "published":
+                // No hacer nada.
+                break
+    // ...
+```
+
+La mayor debilidad de una máquina de estado basada en condicionales se revela una vez que empezamos a añadir más y más estados y comportamientos dependientes de estados a la clase `Documento`. La mayoría de los métodos contendrán condicionales monstruosos que eligen el comportamiento adecuado de un método de acuerdo con el estado actual. Un código así es muy difícil de mantener, porque cualquier cambio en la lógica de transición puede requerir cambiar los condicionales de estado de cada método.
+
+El problema tiende a empeorar con la evolución del proyecto. Es bastante difícil predecir todos los estados y transiciones posibles en la etapa de diseño. Por ello, una máquina de estados esbelta, creada con un grupo limitado de condicionales, puede crecer hasta convertirse en un abotargado desastre con el tiempo.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El patrón State sugiere que crees nuevas clases para todos los estados posibles de un objeto y extraigas todos los comportamientos específicos del estado para colocarlos dentro de esas clases.
+
+En lugar de implementar todos los comportamientos por su cuenta, el objeto original, llamado _contexto_, almacena una referencia a uno de los objetos de estado que representa su estado actual y delega todo el trabajo relacionado con el estado a ese objeto.
+
+<figure><img src=".gitbook/assets/solution-es (1).png" alt=""><figcaption><p>Documento delega el trabajo a un objeto de estado.</p></figcaption></figure>
+
+Para la transición del contexto a otro estado, sustituye el objeto de estado activo por otro objeto que represente ese nuevo estado. Esto sólo es posible si todas las clases de estado siguen la misma interfaz y el propio contexto funciona con esos objetos a través de esa interfaz.
+
+Esta estructura puede resultar similar al patrón **Strategy**, pero hay una diferencia clave. En el patrón State, los estados particulares pueden conocerse entre sí e iniciar transiciones de un estado a otro, mientras que las estrategias casi nunca se conocen.
+
+## State in Java
+
+### Interfaz de un reproductor multimedia <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón State permite a los mismos controles del reproductor multimedia comportarse de forma diferente, dependiendo del estado actual de reproducción. La clase principal del reproductor contiene una referencia a un objeto de estado que realiza la mayor parte del trabajo para el reproductor. Algunas acciones pueden acabar sustituyendo el objeto de estado por otro, lo cual cambia la forma en la que el reproductor reacciona a las interacciones del usuario.
+
+```
+state
+├── states
+│   ├── State.java (Interfaz común de estado)
+│   ├── LockedState.java
+│   ├── ReadyState.java
+│   └── PlayingState.java
+├── ui
+│   ├── Player.java (Código principal del reproductor)
+│   └── UI.java (GUI del reproductor)
+└── Demo.java (Código de inicialización)  
+```
+
+:link: [State in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/state/example)
