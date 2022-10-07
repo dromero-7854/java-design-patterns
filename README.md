@@ -412,7 +412,7 @@ observer
 └── Demo.java (Código de inicialización) 
 ```
 
-:link:[Observer in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
+:link: [Observer in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
 
 ## State
 
@@ -574,4 +574,4 @@ strategy
 └── Demo.java (Código cliente)
 ```
 
-:link:[Strategy in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
+:link: [Strategy in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
