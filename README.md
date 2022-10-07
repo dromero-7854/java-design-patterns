@@ -252,33 +252,23 @@ De este modo, el patrón Mediator te permite encapsular una compleja red de rela
 
 Este ejemplo muestra cómo organizar varios elementos GUI para que cooperen con la ayuda de un mediador sin que dependan los unos de los otros.
 
-:open\_file\_folder: **components (Clases colegas)**
-
-:page\_facing\_up: **components/Component.java**
-
-:page\_facing\_up: **components/AddButton.java**
-
-:page\_facing\_up: **components/DeleteButton.java**
-
-:page\_facing\_up: **components/Filter.java**
-
-:page\_facing\_up: **components/List.java**
-
-:page\_facing\_up: **components/SaveButton.java**
-
-:page\_facing\_up: **components/TextBox.java**
-
-:page\_facing\_up: **components/Title.java**
-
-:open\_file\_folder: **mediator**
-
-:page\_facing\_up: **mediator/Mediator.java (Define la interfaz mediadora común)**
-
-:page\_facing\_up: **mediator/Editor.java (Mediadora concreta)**
-
-:page\_facing\_up: **mediator/Note.java (Una clase de nota)**
-
-:page\_facing\_up: **Demo.java (Código de inicialización)**
+```
+mediator
+├── components (Clases colegas)
+│   ├── Component.java
+│   ├── AddButton.java
+│   ├── DeleteButton.java
+│   ├── Filter.java
+│   ├── List.java
+│   ├── SaveButton.java
+│   ├── TextBox.java
+│   └── Title.java
+├── mediator
+│   ├── Mediator.java (Define la interfaz mediadora común)
+│   ├── Editor.java (Mediadora concreta)
+│   └── Note.java (Una clase de nota)
+└── Demo.java (Código de inicialización)
+```
 
 :link: [Mediator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/mediator/example)
 
@@ -338,40 +328,26 @@ Cuando un usuario solicita deshacer, el editor extrae un comando reciente del hi
 
 Los comandos revertidos se mantienen en el historial hasta que el usuario realice modificaciones en las formas en pantalla. Esto es fundamental para rehacer comandos deshechos.
 
-:open\_file\_folder: **editor**
-
-:page\_facing\_up: **editor/Editor.java (Código del editor)**
-
-:page\_facing\_up: **editor/Canvas.java (Código del lienzo)**
-
-:open\_file\_folder: **history**
-
-:page\_facing\_up: **history/History.java (El historial almacena comandos y mementos)**
-
-:page\_facing\_up: **history/Memento.java (Clase memento)**
-
-:open\_file\_folder: **commands**
-
-:page\_facing\_up: **commands/Command.java (Interfaz comando base)**
-
-:page\_facing\_up: **commands/ColorCommand.java (Cambia el color de la forma seleccionada)**
-
-:page\_facing\_up: **commands/MoveCommand.java (Mueve la forma seleccionada)**
-
-:open\_file\_folder: **shapes (Varias formas)**
-
-:page\_facing\_up: **shapes/Shape.java**
-
-:page\_facing\_up: **shapes/BaseShape.java**
-
-:page\_facing\_up: **shapes/Circle.java**
-
-:page\_facing\_up: **shapes/Dot.java**
-
-:page\_facing\_up: **shapes/Rectangle.java**
-
-:page\_facing\_up: **shapes/CompoundShape.java**
-
-:page\_facing\_up: **Demo.java (Código de inicialización)**
+```
+memento
+├── editor
+│   ├── Editor.java (Código del editor)
+│   └── Canvas.java (Código del lienzo)
+├── history
+│   ├── History.java (El historial almacena comandos y mementos)
+│   └── Memento.java (Clase memento)
+├── commands
+│   ├── Command.java (Interfaz comando base)
+│   ├── ColorCommand.java (Cambia el color de la forma seleccionada)
+│   └── MoveCommand.java (Mueve la forma seleccionada)
+├── shapes (Varias formas)
+│   ├── Shape.java
+│   ├── BaseShape.java
+│   ├── Circle.java
+│   ├── Dot.java
+│   ├── Rectangle.java
+│   └── CompoundShape.java
+└── Demo.java (Código de inicialización)   
+```
 
 :link: [Memento in JAVA](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/memento/example)
