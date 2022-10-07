@@ -40,7 +40,7 @@ Al igual que muchos otros patrones de diseño de comportamiento, el **Chain of R
 
 En nuestro ejemplo de los sistemas de pedidos, un manejador realiza el procesamiento y después decide si pasa la solicitud al siguiente eslabón de la cadena. Asumiendo que la solicitud contiene la información correcta, todos los manejadores pueden ejecutar su comportamiento principal, ya sean comprobaciones de autenticación o almacenamiento en la memoria caché.
 
-<figure><img src=".gitbook/assets/solution1-es (1).png" alt=""><figcaption><p>Los manejadores se alinean uno tras otro, formando una cadena.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/solution1-es (1) (1).png" alt=""><figcaption><p>Los manejadores se alinean uno tras otro, formando una cadena.</p></figcaption></figure>
 
 No obstante, hay una solución ligeramente diferente (y un poco más estandarizada) en la que, al recibir una solicitud, un manejador decide si puede procesarla. Si puede, no pasa la solicitud más allá. De modo que un único manejador procesa la solicitud o no lo hace ninguno en absoluto. Esta solución es muy habitual cuando tratamos con eventos en pilas de elementos dentro de una interfaz gráfica de usuario (GUI).
 
@@ -238,7 +238,7 @@ Al implementar esta lógica directamente dentro del código de los elementos del
 
 En nuestro ejemplo del formulario de edición de perfiles, la propia clase de diálogo puede actuar como mediadora. Lo más probable es que la clase de diálogo conozca ya todos sus subelementos, por lo que ni siquiera será necesario que introduzcas nuevas dependencias en esta clase.
 
-<figure><img src=".gitbook/assets/solution1-es.png" alt=""><figcaption><p>Los elementos UI deben comunicarse indirectamente, a través del objeto mediador.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/solution1-es (1).png" alt=""><figcaption><p>Los elementos UI deben comunicarse indirectamente, a través del objeto mediador.</p></figcaption></figure>
 
 El cambio más significativo lo sufren los propios elementos del formulario. Pensemos en el botón de envío. Antes, cada vez que un usuario hacía clic en el botón, tenía que validar los valores de todos los elementos individuales del formulario. Ahora su único trabajo consiste en notificar al diálogo acerca del clic. Al recibir esta notificación, el propio diálogo realiza las validaciones o pasa la tarea a los elementos individuales. De este modo, en lugar de estar ligado a una docena de elementos del formulario, el botón solo es dependiente de la clase diálogo.
 
@@ -351,3 +351,65 @@ memento
 ```
 
 :link: [Memento in JAVA](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/memento/example)
+
+## Observer
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Observer** es un patrón de diseño de comportamiento que te permite definir un mecanismo de suscripción para notificar a varios objetos sobre cualquier evento que le suceda al objeto que están observando.
+
+<figure><img src=".gitbook/assets/observer.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina que tienes dos tipos de objetos: un objeto `Cliente` y un objeto `Tienda`. El cliente está muy interesado en una marca particular de producto (digamos, un nuevo modelo de iPhone) que estará disponible en la tienda muy pronto.
+
+El cliente puede visitar la tienda cada día para comprobar la disponibilidad del producto. Pero, mientras el producto está en camino, la mayoría de estos viajes serán en vano.s\
+
+
+<figure><img src=".gitbook/assets/observer-comic-1-es.png" alt=""><figcaption><p>Visita a la tienda vs. envío de spam</p></figcaption></figure>
+
+Por otro lado, la tienda podría enviar cientos de correos (lo cual se podría considerar spam) a todos los clientes cada vez que hay un nuevo producto disponible. Esto ahorraría a los clientes los interminables viajes a la tienda, pero, al mismo tiempo, molestaría a otros clientes que no están interesados en los nuevos productos.
+
+Parece que nos encontramos ante un conflicto. O el cliente pierde tiempo comprobando la disponibilidad del producto, o bien la tienda desperdicia recursos notificando a los clientes equivocados.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El objeto que tiene un estado interesante suele denominarse _sujeto_, pero, como también va a notificar a otros objetos los cambios en su estado, le llamaremos _notificador_ (en ocasiones también llamado _publicador_). El resto de los objetos que quieren conocer los cambios en el estado del notificador, se denominan _suscriptores_.
+
+El patrón Observer sugiere que añadas un mecanismo de suscripción a la clase notificadora para que los objetos individuales puedan suscribirse o cancelar su suscripción a un flujo de eventos que proviene de esa notificadora. ¡No temas! No es tan complicado como parece. En realidad, este mecanismo consiste en: 1) un campo matriz para almacenar una lista de referencias a objetos suscriptores y 2) varios métodos públicos que permiten añadir suscriptores y eliminarlos de esa lista.
+
+<figure><img src=".gitbook/assets/solution1-es.png" alt=""><figcaption><p>Un mecanismo de suscripción permite a los objetos individuales suscribirse a notificaciones de eventos.</p></figcaption></figure>
+
+Ahora, cuando le sucede un evento importante al notificador, recorre sus suscriptores y llama al método de notificación específico de sus objetos.
+
+Las aplicaciones reales pueden tener decenas de clases suscriptoras diferentes interesadas en seguir los eventos de la misma clase notificadora. No querrás acoplar la notificadora a todas esas clases. Además, puede que no conozcas algunas de ellas de antemano si se supone que otras personas pueden utilizar tu clase notificadora.
+
+Por eso es fundamental que todos los suscriptores implementen la misma interfaz y que el notificador únicamente se comunique con ellos a través de esa interfaz. Esta interfaz debe declarar el método de notificación junto con un grupo de parámetros que el notificador puede utilizar para pasar cierta información contextual con la notificación.
+
+<figure><img src=".gitbook/assets/solution2-es.png" alt=""><figcaption><p>El notificador notifica a los suscriptores invocando el método de notificación específico de sus objetos.</p></figcaption></figure>
+
+Si tu aplicación tiene varios tipos diferentes de notificadores y quieres hacer a tus suscriptores compatibles con todos ellos, puedes ir más allá y hacer que todos los notificadores sigan la misma interfaz. Esta interfaz sólo tendrá que describir algunos métodos de suscripción. La interfaz permitirá a los suscriptores observar los estados de los notificadores sin acoplarse a sus clases concretas.
+
+## Observer in Java
+
+### Suscripción a eventos <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón Observer establece una colaboración indirecta entre objetos de un editor de texto. Cada vez que el objeto `Editor` cambia, lo notifica a sus suscriptores. `EmailNotificationListener` y `LogOpenListener` reaccionan a esas notificaciones ejecutando sus principales comportamientos.
+
+Las clases suscriptoras no están acopladas a la clase editora y pueden reutilizarse en otras aplicaciones si fuera necesario. La clase `Editor` depende únicamente de la interfaz suscriptora abstracta. Esto permite añadir nuevos tipos de suscriptor sin cambiar el código del editor.
+
+```
+observer
+├── publisher
+│   └── EventManager.java (Notificador básico)
+├── editor
+│   └── Editor.java (Notificador concreto, rastreado por otros objetos)
+├── listeners
+│   ├── EventListener.java (Interfaz observadora común)
+│   ├── EmailNotificationListener.java (Envía correos electrónicos al recibir la notificación)
+│   └── LogOpenListener.java (Escribe un mensaje a un registro al recibir una notificación)
+└── Demo.java (Código de inicialización) 
+```
+
+:link:[Observer in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
