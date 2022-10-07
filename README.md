@@ -58,15 +58,17 @@ Este ejemplo muestra cómo una solicitud que contiene información de usuario pa
 
 Este ejemplo es un poco diferente de la versión estándar del patrón establecida por varios autores. La mayoría de ejemplos del patrón se basan en la noción de buscar el manejador adecuado, lanzarlo y salir de la cadena a continuación. Pero aquí ejecutamos todos los manejadores hasta que hay uno que **no puede gestionar** una solicitud. Ten en cuenta que éste sigue siendo el patrón Chain of Responsibility, aunque el flujo es un poco distinto.
 
-<pre><code><strong>chain_of_responsibility
-</strong>├── middleware
+```
+chain_of_responsibility
+├── middleware
 │   ├── Middleware.java (Interfaz de validación básica)
 │   ├── ThrottlingMiddleware.java (Comprueba el límite de cantidad de solicitudes)
 │   ├── UserExistsMiddleware.java (Comprueba las credenciales del usuario)
 │   └── UserExistsMiddleware.java (Comprueba el papel del usuario)
 ├── server
 │   └── Server.java (Objetivo de la autorización)
-└── Demo.java (Código cliente)</code></pre>
+└── Demo.java (Código cliente)
+```
 
 :link: [Chain of Responsibility in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/chain\_of\_responsibility/example)
 
@@ -132,23 +134,18 @@ El editor de texto de este ejemplo crea nuevos objetos de comando cada vez que u
 
 Ahora, para realizar la operación deshacer (undo), la aplicación toma el último comando ejecutado del historial y, o bien realiza una acción inversa, o bien restaura el pasado estado del editor guardado por ese comando.
 
-:open\_file\_folder: **commands**
-
-:page\_facing\_up: **commands/Command.java (Comando base abstracto)**
-
-:page\_facing\_up: **commands/CopyCommand.java (Copiar el texto seleccionado en el portapapeles)**
-
-:page\_facing\_up: **commands/PasteCommand.java (Pegar texto desde el portapapeles)**
-
-:page\_facing\_up: **commands/CutCommand.java (Cortar texto al portapapeles)**
-
-:page\_facing\_up: **commands/CommandHistory.java (Historial del comando)**
-
-:open\_file\_folder: **editor**
-
-:page\_facing\_up: **editor/Editor.java (GUI del editor de texto)**
-
-:page\_facing\_up: **Demo.java (Código cliente)**
+```
+command
+├── commands
+│   ├── Command.java (Comando base abstracto)
+│   ├── CopyCommand.java (Copiar el texto seleccionado en el portapapeles)
+│   ├── PasteCommand.java (Pegar texto desde el portapapeles)
+│   ├── CutCommand.java (Cortar texto al portapapeles)
+│   └── CommandHistory.java (Historial del comando)
+├── editor
+│   └── Editor.java (GUI del editor de texto)
+└── Demo.java (Código cliente)
+```
 
 :link: [Command in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/command/example)
 
@@ -196,31 +193,22 @@ Todos los iteradores deben implementar la misma interfaz. Esto hace que el códi
 
 En este ejemplo, el patrón Iterator se utiliza para recorrer perfiles sociales de una colección remota de una red social, sin exponer los detalles de la comunicación al código cliente.
 
-:open\_file\_folder: **iterators**
-
-:page\_facing\_up: **iterators/ProfileIterator.java (Define la interfaz del iterador)**
-
-:page\_facing\_up: **iterators/FacebookIterator.java (Implementa la iteración por perfiles de Facebook)**
-
-:page\_facing\_up: **iterators/LinkedInIterator.java (Implementa la iteración por perfiles de LinkedIn)**
-
-:open\_file\_folder: **social\_networks**
-
-:page\_facing\_up: **social\_networks/SocialNetwork.java (Define una interfaz común de red social)**
-
-:page\_facing\_up: **social\_networks/Facebook.java (Facebook)**
-
-:page\_facing\_up: **social\_networks/LinkedIn.java (LinkedIn)**
-
-:open\_file\_folder: **profile**
-
-:page\_facing\_up: **profile/Profile.java (Perfiles sociales)**
-
-:open\_file\_folder: **spammer**
-
-:page\_facing\_up: **spammer/SocialSpammer.java (Aplicación de envío de mensajes)**
-
-:page\_facing\_up: **Demo.java (Código cliente)**
+```
+iterator
+├── iterators
+│   ├── ProfileIterator.java (Define la interfaz del iterador)
+│   ├── FacebookIterator.java (Implementa la iteración por perfiles de Facebook)
+│   └── LinkedInIterator.java (Implementa la iteración por perfiles de LinkedIn)
+├── social_networks
+│   ├── SocialNetwork.java (Define una interfaz común de red social)
+│   ├── Facebook.java
+│   └── LinkedIn.java
+├── profile
+│   └── Profile.java (Perfiles sociales)
+├── spammer
+│   └── SocialSpammer.java (Aplicación de envío de mensajes)
+└── Demo.java (Código cliente) 
+```
 
 :link: [Iterator in Java](https://github.com/dromero-7854/knowledge/tree/main/java-design-patterns-examples/src/iterator/example)
 
