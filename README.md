@@ -540,19 +540,19 @@ Incluso contando con los mismos argumentos, cada clase de enrutamiento puede cre
 
 ### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
 
-:heavy\_check\_mark: Puedes intercambiar algoritmos usados dentro de un objeto durante el tiempo de ejecución.
+:heavy\_check\_mark:  Puedes intercambiar algoritmos usados dentro de un objeto durante el tiempo de ejecución.
 
-:heavy\_check\_mark:Puedes aislar los detalles de implementación de un algoritmo del código que lo utiliza.
+:heavy\_check\_mark:  Puedes aislar los detalles de implementación de un algoritmo del código que lo utiliza.
 
-:heavy\_check\_mark:Puedes sustituir la herencia por composición.
+:heavy\_check\_mark:  Puedes sustituir la herencia por composición.
 
-:heavy\_check\_mark:Principio de abierto/cerrado. Puedes introducir nuevas estrategias sin tener que cambiar el contexto.
+:heavy\_check\_mark:  Principio de abierto/cerrado. Puedes introducir nuevas estrategias sin tener que cambiar el contexto.
 
-:heavy\_multiplication\_x:Si sólo tienes un par de algoritmos que raramente cambian, no hay una razón real para complicar el programa en exceso con nuevas clases e interfaces que vengan con el patrón.
+:heavy\_multiplication\_x:  Si sólo tienes un par de algoritmos que raramente cambian, no hay una razón real para complicar el programa en exceso con nuevas clases e interfaces que vengan con el patrón.
 
-:heavy\_multiplication\_x:Los clientes deben conocer las diferencias entre estrategias para poder seleccionar la adecuada.
+:heavy\_multiplication\_x:  Los clientes deben conocer las diferencias entre estrategias para poder seleccionar la adecuada.
 
-:heavy\_multiplication\_x:Muchos lenguajes de programación modernos tienen un soporte de tipo funcional que te permite implementar distintas versiones de un algoritmo dentro de un grupo de funciones anónimas. Entonces puedes utilizar estas funciones exactamente como habrías utilizado los objetos de estrategia, pero sin saturar tu código con clases e interfaces adicionales.
+:heavy\_multiplication\_x:  Muchos lenguajes de programación modernos tienen un soporte de tipo funcional que te permite implementar distintas versiones de un algoritmo dentro de un grupo de funciones anónimas. Entonces puedes utilizar estas funciones exactamente como habrías utilizado los objetos de estrategia, pero sin saturar tu código con clases e interfaces adicionales.
 
 ## Strategy in Java
 
@@ -562,3 +562,16 @@ En este ejemplo, el patrón Strategy se utiliza para implementar los distintos m
 
 Las estrategias concretas no solo realizan el propio pago, sino que además alteran el comportamiento del formulario de pago, proporcionando campos adecuados para el registro de los datos del pago.
 
+```
+strategy
+├── strategies
+│   ├── PayStrategy.java (Interfaz común de los medios de pago)
+│   ├── PayByPayPal.java
+│   ├── PayByCreditCard.java
+│   └── CreditCard.java
+├── order
+│   └── Order.java (Clase de pedido)
+└── Demo.java (Código cliente)
+```
+
+:link:[Strategy in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/observer/example)
