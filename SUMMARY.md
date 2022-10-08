@@ -1,4 +1,4 @@
 # Table of contents
 
-* [Patrones de comportamiento](README.md)
-* [Patrones creacionales](patrones-creacionales.md)
+* [Patrones de diseño](README.md)
+  * [Patrones de comportamiento](patrones-de-diseno/readme.md)
