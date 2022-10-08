@@ -6,8 +6,11 @@ package strategy.example.strategies;
 public class CreditCard {
 
 	private int amount;
-    private String number;
-    private String date;
+    @SuppressWarnings("unused")
+	private String number;
+    @SuppressWarnings("unused")
+	private String date;
+    @SuppressWarnings("unused")
     private String cvv;
 
     CreditCard(String number, String date, String cvv) {
