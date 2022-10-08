@@ -16,7 +16,7 @@ Imagina que estás trabajando en un sistema de pedidos online. Quieres restringi
 
 Tras planificar un poco, te das cuenta de que estas comprobaciones deben realizarse secuencialmente. La aplicación puede intentar autenticar a un usuario en el sistema cuando reciba una solicitud que contenga las credenciales del usuario. Sin embargo, si esas credenciales no son correctas y la autenticación falla, no hay razón para proceder con otras comprobaciones.
 
-<figure><img src="../.gitbook/assets/problem1-es (1).png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem1-es (2).png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
 
 Durante los meses siguientes, implementas varias de esas comprobaciones secuenciales.
 
@@ -40,7 +40,7 @@ Al igual que muchos otros patrones de diseño de comportamiento, el **Chain of R
 
 En nuestro ejemplo de los sistemas de pedidos, un manejador realiza el procesamiento y después decide si pasa la solicitud al siguiente eslabón de la cadena. Asumiendo que la solicitud contiene la información correcta, todos los manejadores pueden ejecutar su comportamiento principal, ya sean comprobaciones de autenticación o almacenamiento en la memoria caché.
 
-<figure><img src="../.gitbook/assets/solution1-es (1) (1).png" alt=""><figcaption><p>Los manejadores se alinean uno tras otro, formando una cadena.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/solution1-es (2).png" alt=""><figcaption><p>Los manejadores se alinean uno tras otro, formando una cadena.</p></figcaption></figure>
 
 No obstante, hay una solución ligeramente diferente (y un poco más estandarizada) en la que, al recibir una solicitud, un manejador decide si puede procesarla. Si puede, no pasa la solicitud más allá. De modo que un único manejador procesa la solicitud o no lo hace ninguno en absoluto. Esta solución es muy habitual cuando tratamos con eventos en pilas de elementos dentro de una interfaz gráfica de usuario (GUI).
 
@@ -98,7 +98,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src="../.gitbook/assets/problem2 (1) (2).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem2 (2).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -114,13 +114,13 @@ El buen diseño de software a menudo se basa en el principio de separación de r
 
 El código puede tener este aspecto: un objeto GUI invoca a un método de un objeto de la lógica de negocio, pasándole algunos argumentos. Este proceso se describe habitualmente como un objeto que envía a otro una _solicitud_.
 
-<figure><img src="../.gitbook/assets/solution1-es (2).png" alt=""><figcaption><p>Los objetos GUI pueden acceder directamente a los objetos de la lógica de negocio.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/solution1-es.png" alt=""><figcaption><p>Los objetos GUI pueden acceder directamente a los objetos de la lógica de negocio.</p></figcaption></figure>
 
 <mark style="background-color:yellow;">El patrón Command sugiere que los objetos GUI no envíen estas solicitudes directamente. En lugar de ello, debes extraer todos los detalles de la solicitud, como el objeto que está siendo invocado, el nombre del método y la lista de argumentos, y ponerlos dentro de una clase</mark> _<mark style="background-color:yellow;">comando</mark>_ <mark style="background-color:yellow;">separada con un único método que activa esta solicitud.</mark>
 
 Los objetos de comando sirven como vínculo entre varios objetos GUI y de lógica de negocio. De ahora en adelante, el objeto GUI no tiene que conocer qué objeto de la lógica de negocio recibirá la solicitud y cómo la procesará. El objeto GUI activa el comando, que gestiona todos los detalles.
 
-<figure><img src="../.gitbook/assets/solution2-es (2).png" alt=""><figcaption><p>Acceso a la capa de lógica de negocio a través de un comando.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/solution2-es.png" alt=""><figcaption><p>Acceso a la capa de lógica de negocio a través de un comando.</p></figcaption></figure>
 
 El siguiente paso es hacer que tus comandos implementen la misma interfaz. Normalmente tiene un único método de ejecución que no acepta parámetros. Esta interfaz te permite utilizar varios comandos con el mismo emisor de la solicitud, sin acoplarla a clases concretas de comandos. Adicionalmente, ahora puedes cambiar objetos de comando vinculados al emisor, cambiando efectivamente el comportamiento del emisor durante el tiempo de ejecución.
 
@@ -185,7 +185,7 @@ command
 
 Las colecciones son de los tipos de datos más utilizados en programación. Sin embargo, una colección tan solo es un contenedor para un grupo de objetos.
 
-<figure><img src="../.gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Varios tipos de colecciones.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem1.png" alt=""><figcaption><p>Varios tipos de colecciones.</p></figcaption></figure>
 
 La mayoría de las colecciones almacena sus elementos en simples listas, pero algunas de ellas se basan en pilas, árboles, grafos y otras estructuras complejas de datos.
 
@@ -193,7 +193,7 @@ Independientemente de cómo se estructure una colección, <mark style="backgroun
 
 Esto puede parecer un trabajo sencillo si tienes una colección basada en una lista. En este caso sólo tienes que recorrer en bucle todos sus elementos. Pero, ¿cómo recorres secuencialmente elementos de una estructura compleja de datos, como un árbol? Por ejemplo, un día puede bastarte con un recorrido de profundidad de un árbol, pero, al día siguiente, quizá necesites un recorrido en anchura. Y, la semana siguiente, puedes necesitar otra cosa, como un acceso aleatorio a los elementos del árbol.
 
-<figure><img src="../.gitbook/assets/problem2.png" alt=""><figcaption><p>La misma colección puede recorrerse de varias formas diferentes.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem2 (1).png" alt=""><figcaption><p>La misma colección puede recorrerse de varias formas diferentes.</p></figcaption></figure>
 
 Añadir más y más algoritmos de recorrido a la colección nubla gradualmente su responsabilidad principal, que es el almacenamiento eficiente de la información. Además, puede que algunos algoritmos estén personalizados para una aplicación específica, por lo que incluirlos en una clase genérica de colección puede resultar extraño.
 
@@ -262,11 +262,11 @@ iterator
 
 Digamos que tienes un diálogo para crear y editar perfiles de cliente. Consiste en varios controles de formulario, como campos de texto, casillas, botones, etc.
 
-<figure><img src="../.gitbook/assets/problem1-es (2).png" alt=""><figcaption><p>Las relaciones entre los elementos de la interfaz de usuario pueden volverse caóticas cuando la aplicación crece.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem1-es (1).png" alt=""><figcaption><p>Las relaciones entre los elementos de la interfaz de usuario pueden volverse caóticas cuando la aplicación crece.</p></figcaption></figure>
 
 Algunos de los elementos del formulario pueden interactuar con otros. Por ejemplo, al seleccionar la casilla “tengo un perro” puede aparecer un campo de texto oculto para introducir el nombre del perro. Otro ejemplo es el botón de envío que tiene que validar los valores de todos los campos antes de guardar la información.
 
-<figure><img src="../.gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Los elementos pueden tener muchas relaciones con otros elementos. Por eso, los cambios en algunos elementos pueden afectar a los demás.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem2 (3).png" alt=""><figcaption><p>Los elementos pueden tener muchas relaciones con otros elementos. Por eso, los cambios en algunos elementos pueden afectar a los demás.</p></figcaption></figure>
 
 Al implementar esta lógica directamente dentro del código de los elementos del formulario, haces que las clases de estos elementos sean mucho más difíciles de reutilizar en otros formularios de la aplicación. Por ejemplo, no podrás utilizar la clase de la casilla dentro de otro formulario porque está acoplada al campo de texto del perro. O bien podrás utilizar todas las clases implicadas en representar el formulario de perfil, o no podrás usar ninguna en absoluto.
 
@@ -441,7 +441,7 @@ El objeto que tiene un estado interesante suele denominarse _sujeto_, pero, como
 
 El patrón Observer sugiere que añadas un mecanismo de suscripción a la clase notificadora para que los objetos individuales puedan suscribirse o cancelar su suscripción a un flujo de eventos que proviene de esa notificadora. ¡No temas! No es tan complicado como parece. En realidad, este mecanismo consiste en: 1) un campo matriz para almacenar una lista de referencias a objetos suscriptores y 2) varios métodos públicos que permiten añadir suscriptores y eliminarlos de esa lista.
 
-<figure><img src="../.gitbook/assets/solution1-es.png" alt=""><figcaption><p>Un mecanismo de suscripción permite a los objetos individuales suscribirse a notificaciones de eventos.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/solution1-es (3).png" alt=""><figcaption><p>Un mecanismo de suscripción permite a los objetos individuales suscribirse a notificaciones de eventos.</p></figcaption></figure>
 
 Ahora, cuando le sucede un evento importante al notificador, recorre sus suscriptores y llama al método de notificación específico de sus objetos.
 
@@ -449,7 +449,7 @@ Las aplicaciones reales pueden tener decenas de clases suscriptoras diferentes i
 
 Por eso es fundamental que todos los suscriptores implementen la misma interfaz y que el notificador únicamente se comunique con ellos a través de esa interfaz. Esta interfaz debe declarar el método de notificación junto con un grupo de parámetros que el notificador puede utilizar para pasar cierta información contextual con la notificación.
 
-<figure><img src="../.gitbook/assets/solution2-es.png" alt=""><figcaption><p>El notificador notifica a los suscriptores invocando el método de notificación específico de sus objetos.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/solution2-es (2).png" alt=""><figcaption><p>El notificador notifica a los suscriptores invocando el método de notificación específico de sus objetos.</p></figcaption></figure>
 
 Si tu aplicación tiene varios tipos diferentes de notificadores y quieres hacer a tus suscriptores compatibles con todos ellos, puedes ir más allá y hacer que todos los notificadores sigan la misma interfaz. Esta interfaz sólo tendrá que describir algunos métodos de suscripción. La interfaz permitirá a los suscriptores observar los estados de los notificadores sin acoplarse a sus clases concretas.
 
@@ -506,7 +506,7 @@ También puedes aplicar esta solución a los objetos. Imagina que tienes una cla
 * En `Moderación`, hace público el documento, pero sólo si el usuario actual es un administrador.
 * En `Publicado`, no hace nada en absoluto.
 
-<figure><img src="../.gitbook/assets/problem2-es (3).png" alt=""><figcaption><p>Posibles estados y transiciones de un objeto de documento.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem2-es.png" alt=""><figcaption><p>Posibles estados y transiciones de un objeto de documento.</p></figcaption></figure>
 
 Las máquinas de estado se implementan normalmente con muchos operadores condicionales (`if` o `switch`) que seleccionan el comportamiento adecuado dependiendo del estado actual del objeto. Normalmente, este “estado” es tan solo un grupo de valores de los campos del objeto. Aunque nunca hayas oído hablar de máquinas de estados finitos, probablemente hayas implementado un estado al menos alguna vez. ¿Te suena esta estructura de código?
 
@@ -582,7 +582,7 @@ state
 
 **Strategy** es un patrón de diseño de comportamiento que te permite definir una familia de algoritmos, colocar cada uno de ellos en una clase separada y hacer sus objetos intercambiables.
 
-<figure><img src="../.gitbook/assets/strategy.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/strategy (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Problema <a href="#problem" id="problem"></a>
 
@@ -594,7 +594,7 @@ La primera versión de la aplicación sólo podía generar las rutas sobre carre
 
 Sin embargo, esto era sólo el principio. Más tarde planeaste añadir la generación de rutas para ciclistas, y más tarde, otra opción para trazar rutas por todas las atracciones turísticas de una ciudad.
 
-<figure><img src="../.gitbook/assets/problem.png" alt=""><figcaption><p>El código del navegador se saturó.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem (1).png" alt=""><figcaption><p>El código del navegador se saturó.</p></figcaption></figure>
 
 Aunque desde una perspectiva comercial la aplicación era un éxito, la parte técnica provocaba muchos dolores de cabeza. Cada vez que añadías un nuevo algoritmo de enrutamiento, la clase principal del navegador doblaba su tamaño. En cierto momento, la bestia se volvió demasiado difícil de mantener.
 
@@ -670,7 +670,7 @@ Imagina que estás creando una aplicación de minería de datos que analiza docu
 
 La primera versión de la aplicación sólo funcionaba con archivos DOC. La siguiente versión podía soportar archivos CSV. Un mes después, le “enseñaste” a extraer datos de archivos PDF.
 
-<figure><img src="../.gitbook/assets/problem (1).png" alt=""><figcaption><p>Las clases de minería de datos contenían mucho código duplicado.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem.png" alt=""><figcaption><p>Las clases de minería de datos contenían mucho código duplicado.</p></figcaption></figure>
 
 En cierto momento te das cuenta de que las tres clases tienen mucho código similar. Aunque el código para gestionar distintos formatos de datos es totalmente diferente en todas las clases, el código para procesar y analizar los datos es casi idéntico. ¿No sería genial deshacerse de la duplicación de código, dejando intacta la estructura del algoritmo?
 
@@ -736,13 +736,13 @@ template_method
 
 Imagina que tu equipo desarrolla una aplicación que funciona con información geográfica estructurada como un enorme grafo. Cada nodo del grafo puede representar una entidad compleja, como una ciudad, pero también cosas más específicas, como industrias, áreas turísticas, etc. Los nodos están conectados con otros si hay un camino entre los objetos reales que representan. Técnicamente, cada tipo de nodo está representado por su propia clase, mientras que cada nodo específico es un objeto.
 
-<figure><img src="../.gitbook/assets/problem1.png" alt=""><figcaption><p>Exportando el grafo a XML.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Exportando el grafo a XML.</p></figcaption></figure>
 
 En cierto momento, te surge la tarea de implementar la exportación del grafo a formato XML. Al principio, el trabajo parece bastante sencillo. Planificaste añadir un método de exportación a cada clase de nodo y después aprovechar la recursión para recorrer cada nodo del grafo, ejecutando el método de exportación. La solución era sencilla y elegante: gracias al polimorfismo, no acoplabas el código que invocaba el método de exportación a clases concretas de nodos.
 
 Lamentablemente, el arquitecto del sistema no te permitió alterar las clases de nodo existentes. Dijo que el código ya estaba en producción y no quería arriesgarse a que se descompusiera por culpa de un potencial error en tus cambios.
 
-<figure><img src="../.gitbook/assets/problem2-es.png" alt=""><figcaption><p>El método de exportación XML tuvo que añadirse a todas las clases de nodo, lo que supuso el riesgo de descomponer la aplicación si se introducía algún error con el cambio.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/problem2-es (3).png" alt=""><figcaption><p>El método de exportación XML tuvo que añadirse a todas las clases de nodo, lo que supuso el riesgo de descomponer la aplicación si se introducía algún error con el cambio.</p></figcaption></figure>
 
 Además, cuestionó si tenía sentido tener el código de exportación XML dentro de las clases de nodo. El trabajo principal de estas clases era trabajar con geodatos. El comportamiento de la exportación XML resultaría extraño ahí.
 
