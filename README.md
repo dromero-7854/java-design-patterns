@@ -185,7 +185,7 @@ command
 
 Las colecciones son de los tipos de datos más utilizados en programación. Sin embargo, una colección tan solo es un contenedor para un grupo de objetos.
 
-<figure><img src=".gitbook/assets/problem1.png" alt=""><figcaption><p>Varios tipos de colecciones.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Varios tipos de colecciones.</p></figcaption></figure>
 
 La mayoría de las colecciones almacena sus elementos en simples listas, pero algunas de ellas se basan en pilas, árboles, grafos y otras estructuras complejas de datos.
 
@@ -342,7 +342,7 @@ Pensemos en estas instantáneas de estado. ¿Cómo producirías una, exactamente
 
 Ignora ese problema por ahora y asumamos que nuestros objetos se comportan como hippies: prefieren relaciones abiertas y mantienen su estado público. Aunque esta solución resolvería el problema inmediato y te permitiría producir instantáneas de estados de objetos a voluntad, sigue teniendo algunos inconvenientes serios. En el futuro, puede que decidas refactorizar algunas de las clases editoras, o añadir o eliminar algunos de los campos. Parece fácil, pero esto también exige cambiar las clases responsables de copiar el estado de los objetos afectados.
 
-<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es (4).png" alt=""><figcaption><p>¿Cómo hacer una copia del estado privado del objeto?</p></figcaption></figure>
 
 Pero aún hay más. Pensemos en las propias “instantáneas” del estado del editor. ¿Qué datos contienen? Como mínimo, deben contener el texto, las coordenadas del cursor, la posición actual de desplazamiento, etc. Para realizar una instantánea debes recopilar estos valores y meterlos en algún tipo de contenedor.
 
@@ -506,7 +506,7 @@ También puedes aplicar esta solución a los objetos. Imagina que tienes una cla
 * En `Moderación`, hace público el documento, pero sólo si el usuario actual es un administrador.
 * En `Publicado`, no hace nada en absoluto.
 
-<figure><img src=".gitbook/assets/problem2-es (3) (1).png" alt=""><figcaption><p>Posibles estados y transiciones de un objeto de documento.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es (3).png" alt=""><figcaption><p>Posibles estados y transiciones de un objeto de documento.</p></figcaption></figure>
 
 Las máquinas de estado se implementan normalmente con muchos operadores condicionales (`if` o `switch`) que seleccionan el comportamiento adecuado dependiendo del estado actual del objeto. Normalmente, este “estado” es tan solo un grupo de valores de los campos del objeto. Aunque nunca hayas oído hablar de máquinas de estados finitos, probablemente hayas implementado un estado al menos alguna vez. ¿Te suena esta estructura de código?
 
@@ -736,13 +736,13 @@ template_method
 
 Imagina que tu equipo desarrolla una aplicación que funciona con información geográfica estructurada como un enorme grafo. Cada nodo del grafo puede representar una entidad compleja, como una ciudad, pero también cosas más específicas, como industrias, áreas turísticas, etc. Los nodos están conectados con otros si hay un camino entre los objetos reales que representan. Técnicamente, cada tipo de nodo está representado por su propia clase, mientras que cada nodo específico es un objeto.
 
-<figure><img src=".gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Exportando el grafo a XML.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem1.png" alt=""><figcaption><p>Exportando el grafo a XML.</p></figcaption></figure>
 
 En cierto momento, te surge la tarea de implementar la exportación del grafo a formato XML. Al principio, el trabajo parece bastante sencillo. Planificaste añadir un método de exportación a cada clase de nodo y después aprovechar la recursión para recorrer cada nodo del grafo, ejecutando el método de exportación. La solución era sencilla y elegante: gracias al polimorfismo, no acoplabas el código que invocaba el método de exportación a clases concretas de nodos.
 
 Lamentablemente, el arquitecto del sistema no te permitió alterar las clases de nodo existentes. Dijo que el código ya estaba en producción y no quería arriesgarse a que se descompusiera por culpa de un potencial error en tus cambios.
 
-<figure><img src=".gitbook/assets/problem2-es (3).png" alt=""><figcaption><p>El método de exportación XML tuvo que añadirse a todas las clases de nodo, lo que supuso el riesgo de descomponer la aplicación si se introducía algún error con el cambio.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/problem2-es.png" alt=""><figcaption><p>El método de exportación XML tuvo que añadirse a todas las clases de nodo, lo que supuso el riesgo de descomponer la aplicación si se introducía algún error con el cambio.</p></figcaption></figure>
 
 Además, cuestionó si tenía sentido tener el código de exportación XML dentro de las clases de nodo. El trabajo principal de estas clases era trabajar con geodatos. El comportamiento de la exportación XML resultaría extraño ahí.
 
@@ -800,6 +800,22 @@ Lo confieso. Hemos tenido que cambiar las clases de nodo, después de todo. Pero
 
 Ahora, si extraemos una interfaz común para todos los visitantes, todos los nodos existentes pueden funcionar con cualquier visitante que introduzcas en la aplicación. Si te encuentras introduciendo un nuevo comportamiento relacionado con los nodos, todo lo que tienes que hacer es implementar una nueva clase visitante.
 
-### &#x20;<a href="#analogy" id="analogy"></a>
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
 
-\
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir un nuevo comportamiento que puede funcionar con objetos de clases diferentes sin cambiar esas clases.
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes tomar varias versiones del mismo comportamiento y ponerlas en la misma clase.
+
+:heavy\_check\_mark:  Un objeto visitante puede acumular cierta información útil mientras trabaja con varios objetos. Esto puede resultar útil cuando quieras atravesar una compleja estructura de objetos, como un árbol de objetos, y aplicar el visitante a cada objeto de esa estructura.
+
+:heavy\_multiplication\_x:  Debes actualizar todos los visitantes cada vez que una clase se añada o elimine de la jerarquía de elementos.
+
+:heavy\_multiplication\_x:  Los visitantes pueden carecer del acceso necesario a los campos y métodos privados de los elementos con los que se supone que deben trabajar.
+
+## Visitor in Java
+
+### Exportar formas a XML <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, queremos exportar un grupo de formas geométricas a XML. La idea es que no queremos cambiar directamente el código de las formas o, al menos, debemos intentar mantener los cambios al mínimo.
+
+Al fin y al cabo, el patrón Visitor establece una infraestructura que nos permite añadir cualquier comportamiento a la jerarquía de formas sin cambiar el código existente de esas clases.
