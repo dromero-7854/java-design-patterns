@@ -819,3 +819,19 @@ Ahora, si extraemos una interfaz común para todos los visitantes, todos los nod
 En este ejemplo, queremos exportar un grupo de formas geométricas a XML. La idea es que no queremos cambiar directamente el código de las formas o, al menos, debemos intentar mantener los cambios al mínimo.
 
 Al fin y al cabo, el patrón Visitor establece una infraestructura que nos permite añadir cualquier comportamiento a la jerarquía de formas sin cambiar el código existente de esas clases.
+
+```
+visitor
+├── shapes
+│   ├── Shape.java (Interfaz común de las formas)
+│   ├── Dot.java
+│   ├── Circle.java
+│   ├── Rectangle.java
+│   └── CompoundShape.java
+├── visitor
+│   ├── Visitor.java (Interfaz visitante común)
+│   └── XMLExportVisitor.java (Visitante concreto, exporta todas las formas a XML)
+└── Demo.java (Código cliente)
+```
+
+:link: [Visitor in JAVA](https://github.com/dromero-7854/java-design-patterns/tree/main/java-design-patterns-examples/src/visitor/example)
