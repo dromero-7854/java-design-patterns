@@ -39,3 +39,45 @@ Por ejemplo, tanto la clase `Camión` como la clase `Barco` deben implementar la
 <figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption><p>Siempre y cuando todas las clases de producto implementen una interfaz común, podrás pasar sus objetos al código cliente sin descomponerlo.</p></figcaption></figure>
 
 El código que utiliza el método fábrica (a menudo denominado código _cliente_) no encuentra diferencias entre los productos devueltos por varias subclases, y trata a todos los productos como la clase abstracta `Transporte`. El cliente sabe que todos los objetos de transporte deben tener el método `entrega`, pero no necesita saber cómo funciona exactamente.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Evitas un acoplamiento fuerte entre el creador y los productos concretos.
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes mover el código de creación de producto a un lugar del programa, haciendo que el código sea más fácil de mantener.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes incorporar nuevos tipos de productos en el programa sin descomponer el código cliente existente.
+
+:heavy\_multiplication\_x:  Puede ser que el código se complique, ya que debes incorporar una multitud de nuevas subclases para implementar el patrón. La situación ideal sería introducir el patrón en una jerarquía existente de clases creadoras.
+
+## Factory Method in Java
+
+En este ejemplo, los botones y las casillas actuarán como productos. Tienen tres variantes: macOS, Windows y Linux.
+
+La fábrica abstracta define una interfaz para crear botones y casillas. Hay tres fábricas concretas, que devuelven ambos productos en una única variante.
+
+El código cliente funciona con fábricas y productos utilizando interfaces abstractas. Esto permite al código cliente funcionar con cualquier variante de producto creada por el objeto de fábrica.
+
+```
+factory_method
+├── buttons
+│   ├── Button.java
+│   ├── MacOSButton.java
+│   ├── WindowsButton.java
+│   └── LinuxButton.java
+├── checkboxes
+│   ├── Checkbox.java
+│   ├── MacOSCheckbox.java
+│   ├── WindowsCheckbox.java
+│   └── LinuxCheckbox.java
+├── factories
+│   ├── GUIFactory.java (Fábrica abstracta)
+│   ├── MacOSFactory.java (Fábrica concreta macOS)
+│   ├── WindowsFactory.java (Fábrica concreta Windows) 
+│   └── LinuxFactory.java (Fábrica concreta Ubuntu) 
+├── app
+│   └── Application.java (Código cliente)
+└── Demo.java (Configuración de la aplicación)
+```
+
+:link: [Factory Method in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/factory\_method/example)
