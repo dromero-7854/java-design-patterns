@@ -126,7 +126,7 @@ El siguiente paso es hacer que tus comandos implementen la misma interfaz. Norma
 
 Puede que hayas observado que falta una pieza del rompecabezas, que son los parámetros de la solicitud. Un objeto GUI puede haber proporcionado al objeto de la capa de negocio algunos parámetros. Ya que el método de ejecución del comando no tiene parámetros, ¿cómo pasaremos los detalles de la solicitud al receptor? <mark style="background-color:yellow;">Resulta que el comando debe estar preconfigurado con esta información o ser capaz de conseguirla por su cuenta.</mark>
 
-<figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption><p>Los objetos GUI delegan el trabajo a los comandos.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution3-es (1).png" alt=""><figcaption><p>Los objetos GUI delegan el trabajo a los comandos.</p></figcaption></figure>
 
 Regresemos a nuestro editor de textos. Tras aplicar el patrón Command, ya no necesitamos todas esas subclases de botón para implementar varios comportamientos de clic. Basta con colocar un único campo dentro de la clase base `Botón` que almacene una referencia a un objeto de comando y haga que el botón ejecute ese comando en un clic.
 
@@ -203,7 +203,7 @@ Por otro lado, el código cliente que debe funcionar con varias colecciones pued
 
 <mark style="background-color:yellow;">La idea central del patrón Iterator es extraer el comportamiento de recorrido de una colección y colocarlo en un objeto independiente llamado</mark> _<mark style="background-color:yellow;">iterador</mark>_<mark style="background-color:yellow;">.</mark>
 
-<figure><img src="../../.gitbook/assets/solution1.png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1 (1).png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
 
 <mark style="background-color:yellow;">Además de implementar el propio algoritmo, un objeto iterador encapsula todos los detalles del recorrido, como la posición actual y cuántos elementos quedan hasta el final.</mark> Debido a esto, varios iteradores pueden recorrer la misma colección al mismo tiempo, independientemente los unos de los otros.
 
