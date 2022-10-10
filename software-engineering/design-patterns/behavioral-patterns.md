@@ -203,7 +203,7 @@ Por otro lado, el código cliente que debe funcionar con varias colecciones pued
 
 <mark style="background-color:yellow;">La idea central del patrón Iterator es extraer el comportamiento de recorrido de una colección y colocarlo en un objeto independiente llamado</mark> _<mark style="background-color:yellow;">iterador</mark>_<mark style="background-color:yellow;">.</mark>
 
-<figure><img src="../../.gitbook/assets/solution1 (1).png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1 (1) (1).png" alt=""><figcaption><p>Los iteradores implementan varios algoritmos de recorrido. Varios objetos iteradores pueden recorrer la misma colección al mismo tiempo.</p></figcaption></figure>
 
 <mark style="background-color:yellow;">Además de implementar el propio algoritmo, un objeto iterador encapsula todos los detalles del recorrido, como la posición actual y cuántos elementos quedan hasta el final.</mark> Debido a esto, varios iteradores pueden recorrer la misma colección al mismo tiempo, independientemente los unos de los otros.
 

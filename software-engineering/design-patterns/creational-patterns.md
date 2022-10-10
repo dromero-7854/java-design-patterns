@@ -26,7 +26,7 @@ Al final acabarás con un código bastante sucio, plagado de condicionales que c
 
 El patrón Factory Method sugiere que, en lugar de llamar al operador `new` para construir objetos directamente, se invoque a un método _fábrica_ especial. No te preocupes: los objetos se siguen creando a través del operador `new`, pero se invocan desde el método fábrica. Los objetos devueltos por el método fábrica a menudo se denominan _productos_.
 
-<figure><img src="../../.gitbook/assets/solution1.png" alt=""><figcaption><p>Las subclases pueden alterar la clase de los objetos devueltos por el método fábrica.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1 (1).png" alt=""><figcaption><p>Las subclases pueden alterar la clase de los objetos devueltos por el método fábrica.</p></figcaption></figure>
 
 A simple vista, puede parecer que este cambio no tiene sentido, ya que tan solo hemos cambiado el lugar desde donde invocamos al constructor. Sin embargo, piensa en esto: ahora puedes sobrescribir el método fábrica en una subclase y cambiar la clase de los productos creados por el método.
 
@@ -81,3 +81,58 @@ factory_method
 ```
 
 :link: [Factory Method in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/factory\_method/example)
+
+## Abstract Factory
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Abstract Factory** es un patrón de diseño creacional que nos permite producir familias de objetos relacionados sin especificar sus clases concretas.
+
+<figure><img src="../../.gitbook/assets/abstract-factory-es.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina que estás creando un simulador de tienda de muebles. Tu código está compuesto por clases que representan lo siguiente:
+
+1. Una familia de productos relacionados, digamos: `Silla` + `Sofá` + `Mesilla`.
+2. Algunas variantes de esta familia. Por ejemplo, los productos `Silla` + `Sofá` + `Mesilla` están disponibles en estas variantes: `Moderna`, `Victoriana`, `ArtDecó`.
+
+<figure><img src="../../.gitbook/assets/problem-es.png" alt=""><figcaption><p>Familias de productos y sus variantes.</p></figcaption></figure>
+
+Necesitamos una forma de crear objetos individuales de mobiliario para que combinen con otros objetos de la misma familia. Los clientes se enfadan bastante cuando reciben muebles que no combinan.
+
+<figure><img src="../../.gitbook/assets/abstract-factory-comic-1-es.png" alt=""><figcaption><p>Un sofá de estilo moderno no combina con unas sillas de estilo victoriano.</p></figcaption></figure>
+
+Además, no queremos cambiar el código existente al añadir al programa nuevos productos o familias de productos. Los comerciantes de muebles actualizan sus catálogos muy a menudo, y debemos evitar tener que cambiar el código principal cada vez que esto ocurra.
+
+### Solución <a href="#solution" id="solution"></a>
+
+Lo primero que sugiere el patrón Abstract Factory es que declaremos de forma explícita interfaces para cada producto diferente de la familia de productos (por ejemplo, silla, sofá o mesilla). Después podemos hacer que todas las variantes de los productos sigan esas interfaces. Por ejemplo, todas las variantes de silla pueden implementar la interfaz `Silla`, así como todas las variantes de mesilla pueden implementar la interfaz `Mesilla`, y así sucesivamente.
+
+<figure><img src="../../.gitbook/assets/solution1.png" alt=""><figcaption><p>Todas las variantes del mismo objeto deben moverse a una única jerarquía de clase.</p></figcaption></figure>
+
+El siguiente paso consiste en declarar la _Fábrica abstracta_: una interfaz con una lista de métodos de creación para todos los productos que son parte de la familia de productos (por ejemplo, `crearSilla`, `crearSofá` y `crearMesilla`). Estos métodos deben devolver productos **abstractos** representados por las interfaces que extrajimos previamente: `Silla`, `Sofá`, `Mesilla`, etc.
+
+<figure><img src="../../.gitbook/assets/solution2.png" alt=""><figcaption><p>Cada fábrica concreta se corresponde con una variante específica del producto.</p></figcaption></figure>
+
+Ahora bien, ¿qué hay de las variantes de los productos? Para cada variante de una familia de productos, creamos una clase de fábrica independiente basada en la interfaz `FábricaAbstracta`. Una fábrica es una clase que devuelve productos de un tipo particular. Por ejemplo, la `FábricadeMueblesModernos` sólo puede crear objetos de `SillaModerna`, `SofáModerno` y `MesillaModerna`.
+
+El código cliente tiene que funcionar con fábricas y productos a través de sus respectivas interfaces abstractas. Esto nos permite cambiar el tipo de fábrica que pasamos al código cliente, así como la variante del producto que recibe el código cliente, sin descomponer el propio código cliente.
+
+<figure><img src="../../.gitbook/assets/abstract-factory-comic-2-es.png" alt=""><figcaption><p>Al cliente no le debe importar la clase concreta de la fábrica con la que funciona.</p></figcaption></figure>
+
+Digamos que el cliente quiere una fábrica para producir una silla. El cliente no tiene que conocer la clase de la fábrica y tampoco importa el tipo de silla que obtiene. Ya sea un modelo moderno o una silla de estilo victoriano, el cliente debe tratar a todas las sillas del mismo modo, utilizando la interfaz abstracta `Silla`. Con este sistema, lo único que sabe el cliente sobre la silla es que implementa de algún modo el método `sentarse`. Además, sea cual sea la variante de silla devuelta, siempre combinará con el tipo de sofá o mesilla producida por el mismo objeto de fábrica.
+
+Queda otro punto por aclarar: si el cliente sólo está expuesto a las interfaces abstractas, ¿cómo se crean los objetos de fábrica? Normalmente, la aplicación crea un objeto de fábrica concreto en la etapa de inicialización. Justo antes, la aplicación debe seleccionar el tipo de fábrica, dependiendo de la configuración o de los ajustes del entorno.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes tener la certeza de que los productos que obtienes de una fábrica son compatibles entre sí.
+
+:heavy\_check\_mark:  Evitas un acoplamiento fuerte entre productos concretos y el código cliente.
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes mover el código de creación de productos a un solo lugar, haciendo que el código sea más fácil de mantener.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevas variantes de productos sin descomponer el código cliente existente.
+
+:heavy\_multiplication\_x:  Puede ser que el código se complique más de lo que debería, ya que se introducen muchas nuevas interfaces y clases junto al patrón.
