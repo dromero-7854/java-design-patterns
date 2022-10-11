@@ -327,3 +327,90 @@ prototype
 ```
 
 :link: [Prototype in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/prototype/example)
+
+## Singleton
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Singleton** es un patrón de diseño creacional que nos permite asegurarnos de que una clase tenga una única instancia, a la vez que proporciona un punto de acceso global a dicha instancia.
+
+<figure><img src="../../.gitbook/assets/singleton.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+El patrón Singleton resuelve dos problemas al mismo tiempo, vulnerando el _Principio de responsabilidad única_:
+
+1.  **Garantizar que una clase tenga una única instancia**. ¿Por qué querría alguien controlar cuántas instancias tiene una clase? El motivo más habitual es controlar el acceso a algún recurso compartido, por ejemplo, una base de datos o un archivo.
+
+    Funciona así: imagina que has creado un objeto y al cabo de un tiempo decides crear otro nuevo. En lugar de recibir un objeto nuevo, obtendrás el que ya habías creado.
+
+    Ten en cuenta que este comportamiento es imposible de implementar con un constructor normal, ya que una llamada al constructor siempre **debe** devolver un nuevo objeto por diseño.
+2. **Proporcionar un punto de acceso global a dicha instancia**. ¿Recuerdas esas variables globales que utilizaste (bueno, sí, fui yo) para almacenar objetos esenciales? Aunque son muy útiles, también son poco seguras, ya que cualquier código podría sobrescribir el contenido de esas variables y descomponer la aplicación.
+
+Al igual que una variable global, el patrón Singleton nos permite acceder a un objeto desde cualquier parte del programa. No obstante, también evita que otro código sobreescriba esa instancia.
+
+Este problema tiene otra cara: no queremos que el código que resuelve el primer problema se encuentre disperso por todo el programa. Es mucho más conveniente tenerlo dentro de una clase, sobre todo si el resto del código ya depende de ella.
+
+Hoy en día el patrón Singleton se ha popularizado tanto que la gente suele llamar _singleton_ a cualquier patrón, incluso si solo resuelve uno de los problemas antes mencionados.
+
+### Solución <a href="#solution" id="solution"></a>
+
+Todas las implementaciones del patrón Singleton tienen estos dos pasos en común:
+
+* Hacer privado el constructor por defecto para evitar que otros objetos utilicen el operador `new` con la clase Singleton.
+* Crear un método de creación estático que actúe como constructor. Tras bambalinas, este método invoca al constructor privado para crear un objeto y lo guarda en un campo estático. Las siguientes llamadas a este método devuelven el objeto almacenado en caché.
+
+Si tu código tiene acceso a la clase Singleton, podrá invocar su método estático. De esta manera, cada vez que se invoque este método, siempre se devolverá el mismo objeto.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes tener la certeza de que una clase tiene una única instancia.
+
+:heavy\_check\_mark:  Obtienes un punto de acceso global a dicha instancia.
+
+:heavy\_check\_mark:  El objeto Singleton solo se inicializa cuando se requiere por primera vez.
+
+:heavy\_multiplication\_x:  Vulnera el _Principio de responsabilidad única_. El patrón resuelve dos problemas al mismo tiempo.
+
+:heavy\_multiplication\_x:  El patrón Singleton puede enmascarar un mal diseño, por ejemplo, cuando los componentes del programa saben demasiado los unos sobre los otros.
+
+:heavy\_multiplication\_x:  El patrón requiere de un tratamiento especial en un entorno con múltiples hilos de ejecución, para que varios hilos no creen un objeto Singleton varias veces.
+
+:heavy\_multiplication\_x:  Puede resultar complicado realizar la prueba unitaria del código cliente del Singleton porque muchos _frameworks_ de prueba dependen de la herencia a la hora de crear objetos simulados (mock objects). Debido a que la clase Singleton es privada y en la mayoría de los lenguajes resulta imposible sobrescribir métodos estáticos, tendrás que pensar en una manera original de simular el Singleton. O, simplemente, no escribas las pruebas. O no utilices el patrón Singleton.
+
+## Singleton in Java
+
+### Singleton ingenuo (hilo único) <a href="#example-0-title" id="example-0-title"></a>
+
+Es muy fácil implementar un Singleton descuidado. Tan solo necesitas esconder el constructor e implementar un método de creación estático.
+
+```
+singleton
+└── a_singlethread
+    ├── Singleton.java
+    └── DemoSingleThread.java (Código cliente)
+```
+
+### Singleton ingenuo (multihilo) <a href="#example-1-title" id="example-1-title"></a>
+
+La misma clase se comporta de forma incorrecta en un entorno de múltiples hilos. Los múltiples hilos pueden llamar al método de creación de forma simultánea y obtener varias instancias de la clase Singleton.
+
+```
+singleton
+└── b_multithread
+    ├── Singleton.java
+    └── DemoMultiThread.java (Código cliente)
+```
+
+### Singleton con seguridad en los hilos y carga diferida <a href="#example-2-title" id="example-2-title"></a>
+
+Para arreglar el problema, debes sincronizar hilos durante la primera creación del objeto Singleton.
+
+```
+singleton
+└── c_multithread_synchronized
+    ├── Singleton.java
+    └── DemoMultiThread.java (Código cliente)
+```
+
+:link: [Singleton in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/singleton/example)
