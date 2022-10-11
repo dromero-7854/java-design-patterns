@@ -1,10 +1,10 @@
-package factory_method.example;
+package abstract_factory.example;
 
-import factory_method.example.app.Application;
-import factory_method.example.factories.GUIFactory;
-import factory_method.example.factories.LinuxFactory;
-import factory_method.example.factories.MacOSFactory;
-import factory_method.example.factories.WindowsFactory;
+import abstract_factory.example.app.Application;
+import abstract_factory.example.factories.GUIFactory;
+import abstract_factory.example.factories.LinuxFactory;
+import abstract_factory.example.factories.MacOSFactory;
+import abstract_factory.example.factories.WindowsFactory;
 
 /**
  * Demo class. Everything comes together here.

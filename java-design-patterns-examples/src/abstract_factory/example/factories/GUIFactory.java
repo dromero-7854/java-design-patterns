@@ -1,7 +1,7 @@
-package factory_method.example.factories;
+package abstract_factory.example.factories;
 
-import factory_method.example.buttons.Button;
-import factory_method.example.checkboxes.Checkbox;
+import abstract_factory.example.buttons.Button;
+import abstract_factory.example.checkboxes.Checkbox;
 
 /**
  * Abstract factory knows about all (abstract) product types.

@@ -1,4 +1,4 @@
-package factory_method.example.buttons;
+package abstract_factory.example.buttons;
 
 /**
  * Abstract Factory assumes that you have several families of products,

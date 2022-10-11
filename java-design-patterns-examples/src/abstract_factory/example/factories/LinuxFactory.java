@@ -1,9 +1,9 @@
-package factory_method.example.factories;
+package abstract_factory.example.factories;
 
-import factory_method.example.buttons.Button;
-import factory_method.example.buttons.LinuxButton;
-import factory_method.example.checkboxes.Checkbox;
-import factory_method.example.checkboxes.LinuxCheckbox;
+import abstract_factory.example.buttons.Button;
+import abstract_factory.example.buttons.LinuxButton;
+import abstract_factory.example.checkboxes.Checkbox;
+import abstract_factory.example.checkboxes.LinuxCheckbox;
 
 /**
  * Each concrete factory extends basic factory and responsible for creating

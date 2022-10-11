@@ -1,8 +1,8 @@
-package factory_method.example.app;
+package abstract_factory.example.app;
 
-import factory_method.example.buttons.Button;
-import factory_method.example.checkboxes.Checkbox;
-import factory_method.example.factories.GUIFactory;
+import abstract_factory.example.buttons.Button;
+import abstract_factory.example.checkboxes.Checkbox;
+import abstract_factory.example.factories.GUIFactory;
 
 /**
  * Factory users don't care which concrete factory they use since they work with

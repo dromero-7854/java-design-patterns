@@ -1,4 +1,4 @@
-package factory_method.example.checkboxes;
+package abstract_factory.example.checkboxes;
 
 /**
  * All products families have the same varieties (MacOS/Windows/Linux).
