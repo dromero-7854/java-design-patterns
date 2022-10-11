@@ -26,7 +26,7 @@ Al final acabarás con un código bastante sucio, plagado de condicionales que c
 
 El patrón Factory Method sugiere que, en lugar de llamar al operador `new` para construir objetos directamente, se invoque a un método _fábrica_ especial. No te preocupes: los objetos se siguen creando a través del operador `new`, pero se invocan desde el método fábrica. Los objetos devueltos por el método fábrica a menudo se denominan _productos_.
 
-<figure><img src="../../.gitbook/assets/solution1 (1).png" alt=""><figcaption><p>Las subclases pueden alterar la clase de los objetos devueltos por el método fábrica.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1 (1) (2).png" alt=""><figcaption><p>Las subclases pueden alterar la clase de los objetos devueltos por el método fábrica.</p></figcaption></figure>
 
 A simple vista, puede parecer que este cambio no tiene sentido, ya que tan solo hemos cambiado el lugar desde donde invocamos al constructor. Sin embargo, piensa en esto: ahora puedes sobrescribir el método fábrica en una subclase y cambiar la clase de los productos creados por el método.
 
@@ -102,7 +102,7 @@ Además, no queremos cambiar el código existente al añadir al programa nuevos 
 
 Lo primero que sugiere el patrón Abstract Factory es que declaremos de forma explícita interfaces para cada producto diferente de la familia de productos (por ejemplo, silla, sofá o mesilla). Después podemos hacer que todas las variantes de los productos sigan esas interfaces. Por ejemplo, todas las variantes de silla pueden implementar la interfaz `Silla`, así como todas las variantes de mesilla pueden implementar la interfaz `Mesilla`, y así sucesivamente.
 
-<figure><img src="../../.gitbook/assets/solution1.png" alt=""><figcaption><p>Todas las variantes del mismo objeto deben moverse a una única jerarquía de clase.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1 (1).png" alt=""><figcaption><p>Todas las variantes del mismo objeto deben moverse a una única jerarquía de clase.</p></figcaption></figure>
 
 El siguiente paso consiste en declarar la _Fábrica abstracta_: una interfaz con una lista de métodos de creación para todos los productos que son parte de la familia de productos (por ejemplo, `crearSilla`, `crearSofá` y `crearMesilla`). Estos métodos deben devolver productos **abstractos** representados por las interfaces que extrajimos previamente: `Silla`, `Sofá`, `Mesilla`, etc.
 
@@ -163,3 +163,97 @@ abstract_factory
 ```
 
 :link: [Abstract Factory in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/abstract\_factory/example)
+
+## Builder
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Builder** es un patrón de diseño creacional que nos permite construir objetos complejos paso a paso. El patrón nos permite producir distintos tipos y representaciones de un objeto empleando el mismo código de construcción.
+
+<figure><img src="../../.gitbook/assets/builder-es.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina un objeto complejo que requiere una inicialización laboriosa, paso a paso, de muchos campos y objetos anidados. Normalmente, este código de inicialización está sepultado dentro de un monstruoso constructor con una gran cantidad de parámetros. O, peor aún: disperso por todo el código cliente.
+
+<figure><img src="../../.gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Crear una subclase por cada configuración posible de un objeto puede complicar demasiado el programa.</p></figcaption></figure>
+
+Por ejemplo, pensemos en cómo crear un objeto `Casa`. Para construir una casa sencilla, debemos construir cuatro paredes y un piso, así como instalar una puerta, colocar un par de ventanas y ponerle un tejado. Pero ¿qué pasa si quieres una casa más grande y luminosa, con un jardín y otros extras (como sistema de calefacción, instalación de fontanería y cableado eléctrico)?
+
+La solución más sencilla es extender la clase base `Casa` y crear un grupo de subclases que cubran todas las combinaciones posibles de los parámetros. Pero, en cualquier caso, acabarás con una cantidad considerable de subclases. Cualquier parámetro nuevo, como el estilo del porche, exigirá que incrementes esta jerarquía aún más.
+
+Existe otra posibilidad que no implica generar subclases. Puedes crear un enorme constructor dentro de la clase base `Casa` con todos los parámetros posibles para controlar el objeto casa. Aunque es cierto que esta solución elimina la necesidad de las subclases, genera otro problema.
+
+<figure><img src="../../.gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Un constructor con un montón de parámetros tiene su inconveniente: no todos los parámetros son necesarios todo el tiempo.</p></figcaption></figure>
+
+En la mayoría de los casos, gran parte de los parámetros no se utilizará, lo que provocará que [las llamadas al constructor sean bastante feas](https://refactoring.guru/es/smells/long-parameter-list). Por ejemplo, solo una pequeña parte de las casas tiene piscina, por lo que los parámetros relacionados con piscinas serán inútiles en nueve de cada diez casos.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El patrón Builder sugiere que saques el código de construcción del objeto de su propia clase y lo coloques dentro de objetos independientes llamados _constructores_.
+
+<figure><img src="../../.gitbook/assets/solution1.png" alt=""><figcaption><p>El patrón Builder te permite construir objetos complejos paso a paso. El patrón Builder no permite a otros objetos acceder al producto mientras se construye.</p></figcaption></figure>
+
+El patrón organiza la construcción de objetos en una serie de pasos (`construirParedes`, `construirPuerta`, etc.). Para crear un objeto, se ejecuta una serie de estos pasos en un objeto constructor. Lo importante es que no necesitas invocar todos los pasos. Puedes invocar sólo aquellos que sean necesarios para producir una configuración particular de un objeto.
+
+Puede ser que algunos pasos de la construcción necesiten una implementación diferente cuando tengamos que construir distintas representaciones del producto. Por ejemplo, las paredes de una cabaña pueden ser de madera, pero las paredes de un castillo tienen que ser de piedra.
+
+En este caso, podemos crear varias clases constructoras distintas que implementen la misma serie de pasos de construcción, pero de forma diferente. Entonces podemos utilizar estos constructores en el proceso de construcción (por ejemplo, una serie ordenada de llamadas a los pasos de construcción) para producir distintos tipos de objetos.
+
+<figure><img src="../../.gitbook/assets/builder-comic-1-es.png" alt=""><figcaption><p>Los distintos constructores ejecutan la misma tarea de formas distintas.</p></figcaption></figure>
+
+Por ejemplo, imagina un constructor que construye todo de madera y vidrio, otro que construye todo con piedra y hierro y un tercero que utiliza oro y diamantes. Al invocar la misma serie de pasos, obtenemos una casa normal del primer constructor, un pequeño castillo del segundo y un palacio del tercero. Sin embargo, esto sólo funcionaría si el código cliente que invoca los pasos de construcción es capaz de interactuar con los constructores mediante una interfaz común.
+
+**Clase directora**
+
+Puedes ir más lejos y extraer una serie de llamadas a los pasos del constructor que utilizas para construir un producto y ponerlas en una clase independiente llamada _directora_. La clase directora define el orden en el que se deben ejecutar los pasos de construcción, mientras que el constructor proporciona la implementación de dichos pasos.
+
+<figure><img src="../../.gitbook/assets/builder-comic-2-es.png" alt=""><figcaption><p>La clase directora sabe qué pasos de construcción ejecutar para lograr un producto que funcione.</p></figcaption></figure>
+
+No es estrictamente necesario tener una clase directora en el programa, ya que se pueden invocar los pasos de construcción en un orden específico directamente desde el código cliente. No obstante, la clase directora puede ser un buen lugar donde colocar distintas rutinas de construcción para poder reutilizarlas a lo largo del programa.
+
+Además, la clase directora esconde por completo los detalles de la construcción del producto al código cliente. El cliente sólo necesita asociar un objeto constructor con una clase directora, utilizarla para iniciar la construcción, y obtener el resultado del objeto constructor.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes construir objetos paso a paso, aplazar pasos de la construcción o ejecutar pasos de forma recursiva.
+
+:heavy\_check\_mark:  Puedes reutilizar el mismo código de construcción al construir varias representaciones de productos.
+
+:heavy\_check\_mark:  _Principio de responsabilidad única_. Puedes aislar un código de construcción complejo de la lógica de negocio del producto.
+
+:heavy\_multiplication\_x:  La complejidad general del código aumenta, ya que el patrón exige la creación de varias clases nuevas.
+
+## **Builder in Java**
+
+### Fabricación de autos paso a paso <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón Builder permite la construcción paso a paso de distintos modelos de auto.
+
+El ejemplo muestra también cómo el patrón Builder crea productos de distinto tipo (manual del auto) utilizando los mismos pasos de construcción.
+
+El Director controla el orden de construcción. Sabe qué pasos de construcción invocar para producir éste o aquel modelo de auto. Trabaja con los constructores únicamente a través de su interfaz común. Esto permite pasar distintos tipos de constructores al director.
+
+El resultado final se extrae del objeto constructor porque el director no puede saber el tipo de producto resultante. Sólo el objeto del constructor sabe exactamente lo que construye.
+
+```
+builder
+├── builders
+│   ├── Builder.java (Interfaz común del constructor)
+│   ├── CarBuilder.java (Constructor de auto)
+│   └── CarManualBuilder.java (Constructor de manual de auto)
+├── cars
+│   ├── Car.java (Producto auto)
+│   ├── Manual.java (Producto manual)
+│   └── CarType.java
+├── components
+│   ├── Engine.java
+│   ├── GPSNavigator.java
+│   ├── Transmission.java
+│   └── TripComputer.java
+├── director
+│   └── Director.java (El director controla los constructores
+└── Demo.java (Código cliente)
+```
+
+:link: [Factory Method in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/builder/example)

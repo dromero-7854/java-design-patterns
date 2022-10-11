@@ -98,7 +98,7 @@ Imagina que estás trabajando en una nueva aplicación de edición de texto. Tu 
 
 Aunque todos estos botones se parecen, se supone que hacen cosas diferentes. ¿Dónde pondrías el código para los varios gestores de clics de estos botones? La solución más simple consiste en crear cientos de subclases para cada lugar donde se utilice el botón. Estas subclases contendrán el código que deberá ejecutarse con el clic en un botón.
 
-<figure><img src="../../.gitbook/assets/problem2 (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem2 (1) (1).png" alt=""><figcaption><p>Muchas subclases de botón. ¿Qué puede salir mal?</p></figcaption></figure>
 
 Pronto te das cuenta de que esta solución es muy deficiente. En primer lugar, tienes una enorme cantidad de subclases, lo cual no supondría un problema si no corrieras el riesgo de descomponer el código de esas subclases cada vez que modifiques la clase base `Botón`. Dicho de forma sencilla, tu código GUI depende torpemente del volátil código de la lógica de negocio.
 
@@ -496,7 +496,7 @@ observer
 
 El patrón State está estrechamente relacionado con el concepto de la _**Máquina de estados finitos**_.
 
-<figure><img src="../../.gitbook/assets/problem1 (2).png" alt=""><figcaption><p>Máquina de estados finitos.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem1 (2) (1).png" alt=""><figcaption><p>Máquina de estados finitos.</p></figcaption></figure>
 
 La idea principal es que, en cualquier momento dado, un programa puede encontrarse en un número _finito_ de _estados_. Dentro de cada estado único, el programa se comporta de forma diferente y puede cambiar de un estado a otro instantáneamente. Sin embargo, dependiendo de un estado actual, el programa puede cambiar o no a otros estados. Estas normas de cambio llamadas _transiciones_ también son finitas y predeterminadas.
 
