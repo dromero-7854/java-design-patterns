@@ -52,32 +52,25 @@ El código que utiliza el método fábrica (a menudo denominado código _cliente
 
 ## Factory Method in Java
 
-En este ejemplo, los botones y las casillas actuarán como productos. Tienen tres variantes: macOS, Windows y Linux.
+### Producción de elementos GUI multiplataforma <a href="#example-0-title" id="example-0-title"></a>
 
-La fábrica abstracta define una interfaz para crear botones y casillas. Hay tres fábricas concretas, que devuelven ambos productos en una única variante.
+En este ejemplo, Buttons (Botones) juega el papel de producto y los diálogos actúan como creadores.
 
-El código cliente funciona con fábricas y productos utilizando interfaces abstractas. Esto permite al código cliente funcionar con cualquier variante de producto creada por el objeto de fábrica.
+Los distintos tipos de diálogos requieren sus propios tipos de elementos. Por eso creamos una subclase para cada tipo de diálogo y sobrescribimos sus métodos fábrica.
+
+Ahora, cada tipo de diálogo instanciará clases de botón. El diálogo base trabaja con productos utilizando su interfaz común, por eso su código sigue siendo funcional tras todos los cambios.
 
 ```
 factory_method
 ├── buttons
-│   ├── Button.java
-│   ├── MacOSButton.java
-│   ├── WindowsButton.java
-│   └── LinuxButton.java
-├── checkboxes
-│   ├── Checkbox.java
-│   ├── MacOSCheckbox.java
-│   ├── WindowsCheckbox.java
-│   └── LinuxCheckbox.java
-├── factories
-│   ├── GUIFactory.java (Fábrica abstracta)
-│   ├── MacOSFactory.java (Fábrica concreta macOS)
-│   ├── WindowsFactory.java (Fábrica concreta Windows) 
-│   └── LinuxFactory.java (Fábrica concreta Ubuntu) 
-├── app
-│   └── Application.java (Código cliente)
-└── Demo.java (Configuración de la aplicación)
+│   ├── Button.java (Interfaz común de producto)
+│   ├── HtmlButton.java
+│   └── WindowsButton.java
+├── factory
+│   ├── Dialog.java (Creador base)
+│   ├── HtmlDialog.java
+│   └── WindowsDialog.java
+└── Demo.java (Código cliente)
 ```
 
 :link: [Factory Method in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/factory\_method/example)
@@ -136,3 +129,37 @@ Queda otro punto por aclarar: si el cliente sólo está expuesto a las interface
 :heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevas variantes de productos sin descomponer el código cliente existente.
 
 :heavy\_multiplication\_x:  Puede ser que el código se complique más de lo que debería, ya que se introducen muchas nuevas interfaces y clases junto al patrón.
+
+## Abstract Factory in Java
+
+### Familias de componentes GUI multiplataforma <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, los botones y las casillas actuarán como productos. Tienen tres variantes: macOS, Windows y Linux.
+
+La fábrica abstracta define una interfaz para crear botones y casillas. Hay tres fábricas concretas, que devuelven ambos productos en una única variante.
+
+El código cliente funciona con fábricas y productos utilizando interfaces abstractas. Esto permite al código cliente funcionar con cualquier variante de producto creada por el objeto de fábrica.
+
+```
+abstract_factory
+├── buttons
+│   ├── Button.java
+│   ├── MacOSButton.java
+│   ├── WindowsButton.java
+│   └── LinuxButton.java
+├── checkboxes
+│   ├── Checkbox.java
+│   ├── MacOSCheckbox.java
+│   ├── WindowsCheckbox.java
+│   └── LinuxCheckbox.java
+├── factories
+│   ├── GUIFactory.java (Fábrica abstracta)
+│   ├── MacOSFactory.java (Fábrica concreta macOS)
+│   ├── WindowsFactory.java (Fábrica concreta Windows) 
+│   └── LinuxFactory.java (Fábrica concreta Ubuntu) 
+├── app
+│   └── Application.java (Código cliente)
+└── Demo.java (Configuración de la aplicación)
+```
+
+:link: [Abstract Factory in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/abstract\_factory/example)
