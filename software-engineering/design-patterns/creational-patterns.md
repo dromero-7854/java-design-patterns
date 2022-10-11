@@ -256,4 +256,74 @@ builder
 └── Demo.java (Código cliente)
 ```
 
-:link: [Factory Method in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/builder/example)
+:link: [Builder in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/builder/example)
+
+## Prototype
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Prototype** es un patrón de diseño creacional que nos permite copiar objetos existentes sin que el código dependa de sus clases.
+
+<figure><img src="../../.gitbook/assets/prototype.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Digamos que tienes un objeto y quieres crear una copia exacta de él. ¿Cómo lo harías? En primer lugar, debes crear un nuevo objeto de la misma clase. Después debes recorrer todos los campos del objeto original y copiar sus valores en el nuevo objeto.
+
+¡Bien! Pero hay una trampa. No todos los objetos se pueden copiar de este modo, porque algunos de los campos del objeto pueden ser privados e invisibles desde fuera del propio objeto.
+
+<figure><img src="../../.gitbook/assets/prototype-comic-1-es.png" alt=""><figcaption><p>No siempre es posible copiar un objeto “desde fuera”.</p></figcaption></figure>
+
+Hay otro problema con el enfoque directo. Dado que debes conocer la clase del objeto para crear un duplicado, el código se vuelve dependiente de esa clase. Si esta dependencia adicional no te da miedo, todavía hay otra trampa. En ocasiones tan solo conocemos la interfaz que sigue el objeto, pero no su clase concreta, cuando, por ejemplo, un parámetro de un método acepta cualquier objeto que siga cierta interfaz.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El patrón Prototype delega el proceso de clonación a los propios objetos que están siendo clonados. El patrón declara una interfaz común para todos los objetos que soportan la clonación. Esta interfaz nos permite clonar un objeto sin acoplar el código a la clase de ese objeto. Normalmente, dicha interfaz contiene un único método `clonar`.
+
+La implementación del método `clonar` es muy parecida en todas las clases. El método crea un objeto a partir de la clase actual y lleva todos los valores de campo del viejo objeto, al nuevo. Se puede incluso copiar campos privados, porque la mayoría de los lenguajes de programación permite a los objetos acceder a campos privados de otros objetos que pertenecen a la misma clase.
+
+Un objeto que soporta la clonación se denomina _prototipo_. Cuando tus objetos tienen decenas de campos y miles de configuraciones posibles, la clonación puede servir como alternativa a la creación de subclases.
+
+<figure><img src="../../.gitbook/assets/prototype-comic-2-es.png" alt=""><figcaption><p>Los prototipos prefabricados pueden ser una alternativa a las subclases.</p></figcaption></figure>
+
+Funciona así: se crea un grupo de objetos configurados de maneras diferentes. Cuando necesites un objeto como el que has configurado, clonas un prototipo en lugar de construir un nuevo objeto desde cero.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes clonar objetos sin acoplarlos a sus clases concretas.
+
+:heavy\_check\_mark:  Puedes evitar un código de inicialización repetido clonando prototipos prefabricados.
+
+:heavy\_check\_mark:  Puedes crear objetos complejos con más facilidad.
+
+:heavy\_check\_mark:  Obtienes una alternativa a la herencia al tratar con preajustes de configuración para objetos complejos.
+
+:heavy\_multiplication\_x:  Clonar objetos complejos con referencias circulares puede resultar complicado.
+
+## Prototype in Java
+
+### Copiar formas gráficas <a href="#example-0-title" id="example-0-title"></a>
+
+Vamos a ver cómo se puede implementar el patrón Prototype sin la interfaz estándar `Cloneable`.
+
+```
+prototype
+├── shapes (Lista de formas)
+│   ├── Shape.java (Interfaz común de las formas)
+│   ├── Circle.java
+│   └── Rectangle.java
+└── Demo.java (Código cliente)
+```
+
+### Registro del prototipo
+
+Puedes implementar un registro centralizado del prototipo (o fábrica), que contendría un grupo de objetos prototipo predefinidos. De este modo, podrías extraer nuevos objetos de la fábrica sin pasar su nombre u otros parámetros. La fábrica buscará un prototipo adecuado, lo clonará y te devolverá una copia.
+
+```
+prototype
+└── cache
+    ├── BundledShapeCache.java (Fábrica de prototipos)
+    └── Demo.java (Ejemplo de clonación)
+```
+
+:link: [Prototype in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/abstract\_factory/example)
