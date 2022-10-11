@@ -326,4 +326,4 @@ prototype
     └── Demo.java (Ejemplo de clonación)
 ```
 
-:link: [Prototype in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/abstract\_factory/example)
+:link: [Prototype in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/prototype/example)
