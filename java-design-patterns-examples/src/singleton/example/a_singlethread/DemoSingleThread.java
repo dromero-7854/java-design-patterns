@@ -1,4 +1,4 @@
-package singleton.example;
+package singleton.example.a_singlethread;
 
 public class DemoSingleThread {
 
