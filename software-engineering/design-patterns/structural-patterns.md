@@ -162,3 +162,150 @@ bridge
 ```
 
 :link: [Bridge in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/bridge/example)
+
+## Composite
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Composite** es un patrón de diseño estructural que te permite componer objetos en estructuras de árbol y trabajar con esas estructuras como si fueran objetos individuales.
+
+<figure><img src="../../.gitbook/assets/composite.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+El uso del patrón Composite sólo tiene sentido cuando el modelo central de tu aplicación puede representarse en forma de árbol.
+
+Por ejemplo, imagina que tienes dos tipos de objetos: `Productos` y `Cajas`. Una `Caja` puede contener varios `Productos` así como cierto número de `Cajas` más pequeñas. Estas `Cajas` pequeñas también pueden contener algunos `Productos` o incluso `Cajas` más pequeñas, y así sucesivamente.
+
+Digamos que decides crear un sistema de pedidos que utiliza estas clases. Los pedidos pueden contener productos sencillos sin envolver, así como cajas llenas de productos... y otras cajas. ¿Cómo determinarás el precio total de ese pedido?
+
+<figure><img src="../../.gitbook/assets/problem-es (3).png" alt=""><figcaption><p>Un pedido puede incluir varios productos empaquetados en cajas, que a su vez están empaquetados en cajas más grandes y así sucesivamente. La estructura se asemeja a un árbol boca abajo.</p></figcaption></figure>
+
+Puedes intentar la solución directa: desenvolver todas las cajas, repasar todos los productos y calcular el total. Esto sería viable en el mundo real; pero en un programa no es tan fácil como ejecutar un bucle. Tienes que conocer de antemano las clases de `Productos` y `Cajas` a iterar, el nivel de anidación de las cajas y otros detalles desagradables. Todo esto provoca que la solución directa sea demasiado complicada, o incluso imposible.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El patrón Composite sugiere que trabajes con `Productos` y `Cajas` a través de una interfaz común que declara un método para calcular el precio total.
+
+¿Cómo funcionaría este método? Para un producto, sencillamente devuelve el precio del producto. Para una caja, recorre cada artículo que contiene la caja, pregunta su precio y devuelve un total por la caja. Si uno de esos artículos fuera una caja más pequeña, esa caja también comenzaría a repasar su contenido y así sucesivamente, hasta que se calcule el precio de todos los componentes internos. Una caja podría incluso añadir costos adicionales al precio final, como costos de empaquetado.
+
+<figure><img src="../../.gitbook/assets/composite-comic-1-es.png" alt=""><figcaption><p>El patrón Composite te permite ejecutar un comportamiento de forma recursiva sobre todos los componentes de un árbol de objetos.</p></figcaption></figure>
+
+La gran ventaja de esta solución es que no tienes que preocuparte por las clases concretas de los objetos que componen el árbol. No tienes que saber si un objeto es un producto simple o una sofisticada caja. Puedes tratarlos a todos por igual a través de la interfaz común. Cuando invocas un método, los propios objetos pasan la solicitud a lo largo del árbol.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes trabajar con estructuras de árbol complejas con mayor comodidad: utiliza el polimorfismo y la recursión en tu favor.
+
+:heavy\_check\_mark:  _Principio de abierto/cerrado_. Puedes introducir nuevos tipos de elemento en la aplicación sin descomponer el código existente, que ahora funciona con el árbol de objetos.
+
+:heavy\_multiplication\_x:  Puede resultar difícil proporcionar una interfaz común para clases cuya funcionalidad difiere demasiado. En algunos casos, tendrás que generalizar en exceso la interfaz componente, provocando que sea más difícil de comprender.
+
+## Composite in Java
+
+### Formas gráficas simples y compuestas <a href="#example-0-title" id="example-0-title"></a>
+
+Este ejemplo muestra cómo crear formas gráficas complejas compuestas por formas simples, y cómo tratarlas a ambas de manera uniforme.
+
+```
+composite
+├── shapes 
+│   ├── Shape.java (Interfaz común de las formas)
+│   ├── BaseShape.java (Forma abstracta con funcionalidad básica)
+│   ├── Dot.java
+│   ├── Circle.java
+│   ├── Rectangle.java
+│   └── CompoundShape.java (Forma compuesta, que consiste en otros objetos de forma
+├── editor 
+│   └── ImageEditor.java (Editor de forma)
+└── Demo.java (Código cliente)
+```
+
+:link: [Composite in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/composite/example)
+
+## Decorator
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Decorator** es un patrón de diseño estructural que te permite añadir funcionalidades a objetos colocando estos objetos dentro de objetos encapsuladores especiales que contienen estas funcionalidades.
+
+<figure><img src="../../.gitbook/assets/decorator.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina que estás trabajando en una biblioteca de notificaciones que permite a otros programas notificar a sus usuarios acerca de eventos importantes.
+
+La versión inicial de la biblioteca se basaba en la clase `Notificador` que solo contaba con unos cuantos campos, un constructor y un único método `send`. El método podía aceptar un argumento de mensaje de un cliente y enviar el mensaje a una lista de correos electrónicos que se pasaban a la clase notificadora a través de su constructor. Una aplicación de un tercero que actuaba como cliente debía crear y configurar el objeto notificador una vez y después utilizarlo cada vez que sucediera algo importante.
+
+<figure><img src="../../.gitbook/assets/problem1-es.png" alt=""><figcaption><p>Un programa puede utilizar la clase notificadora para enviar notificaciones sobre eventos importantes a un grupo predefinido de correos electrónicos.</p></figcaption></figure>
+
+En cierto momento te das cuenta de que los usuarios de la biblioteca esperan algo más que unas simples notificaciones por correo. A muchos de ellos les gustaría recibir mensajes SMS sobre asuntos importantes. Otros querrían recibir las notificaciones por Facebook y, por supuesto, a los usuarios corporativos les encantaría recibir notificaciones por Slack.
+
+<figure><img src="../../.gitbook/assets/problem2.png" alt=""><figcaption><p>Cada tipo de notificación se implementa como una subclase de la clase notificadora.</p></figcaption></figure>
+
+No puede ser muy complicado ¿verdad? Extendiste la clase `Notificador` y metiste los métodos adicionales de notificación dentro de nuevas subclases. Ahora el cliente debería instanciar la clase notificadora deseada y utilizarla para el resto de notificaciones.
+
+Pero entonces alguien te hace una pregunta razonable: “¿Por qué no se pueden utilizar varios tipos de notificación al mismo tiempo? Si tu casa está en llamas, probablemente quieras que te informen a través de todos los canales”.
+
+Intentaste solucionar ese problema creando subclases especiales que combinaban varios métodos de notificación dentro de una clase. Sin embargo, enseguida resultó evidente que esta solución inflaría el código en gran medida, no sólo el de la biblioteca, sino también el código cliente.
+
+<figure><img src="../../.gitbook/assets/problem3.png" alt=""><figcaption><p>Explosión combinatoria de subclases.</p></figcaption></figure>
+
+Debes encontrar alguna otra forma de estructurar las clases de las notificaciones para no alcanzar cifras que rompan accidentalmente un récord Guinness.
+
+### Solución <a href="#solution" id="solution"></a>
+
+Cuando tenemos que alterar la funcionalidad de un objeto, lo primero que se viene a la mente es extender una clase. No obstante, la herencia tiene varias limitaciones importantes de las que debes ser consciente.
+
+* La herencia es estática. No se puede alterar la funcionalidad de un objeto existente durante el tiempo de ejecución. Sólo se puede sustituir el objeto completo por otro creado a partir de una subclase diferente.
+* Las subclases sólo pueden tener una clase padre. En la mayoría de lenguajes, la herencia no permite a una clase heredar comportamientos de varias clases al mismo tiempo.
+
+Una de las formas de superar estas limitaciones es empleando la _Agregación_ o la _Composición_ en lugar de la _Herencia_. Ambas alternativas funcionan prácticamente del mismo modo: un objeto _tiene una_ referencia a otro y le delega parte del trabajo, mientras que con la herencia, el propio objeto _puede_ realizar ese trabajo, heredando el comportamiento de su superclase.
+
+Con esta nueva solución puedes sustituir fácilmente el objeto “ayudante” vinculado por otro, cambiando el comportamiento del contenedor durante el tiempo de ejecución. Un objeto puede utilizar el comportamiento de varias clases con referencias a varios objetos, delegándoles todo tipo de tareas. La agregación/composición es el principio clave que se esconde tras muchos patrones de diseño, incluyendo el Decorator. A propósito, regresemos a la discusión sobre el patrón.
+
+<figure><img src="../../.gitbook/assets/solution1-es.png" alt=""><figcaption><p>Herencia vs. Agregación</p></figcaption></figure>
+
+“Wrapper” (envoltorio, en inglés) es el sobrenombre alternativo del patrón Decorator, que expresa claramente su idea principal. Un _wrapper_ es un objeto que puede vincularse con un objeto _objetivo_. El wrapper contiene el mismo grupo de métodos que el objetivo y le delega todas las solicitudes que recibe. No obstante, el wrapper puede alterar el resultado haciendo algo antes o después de pasar la solicitud al objetivo.
+
+¿Cuándo se convierte un simple wrapper en el verdadero decorador? Como he mencionado, el wrapper implementa la misma interfaz que el objeto envuelto. Éste es el motivo por el que, desde la perspectiva del cliente, estos objetos son idénticos. Haz que el campo de referencia del wrapper acepte cualquier objeto que siga esa interfaz. Esto te permitirá _envolver_ un objeto en varios wrappers, añadiéndole el comportamiento combinado de todos ellos.
+
+En nuestro ejemplo de las notificaciones, dejemos la sencilla funcionalidad de las notificaciones por correo electrónico dentro de la clase base `Notificador`, pero convirtamos el resto de los métodos de notificación en decoradores.
+
+<figure><img src="../../.gitbook/assets/solution2.png" alt=""><figcaption><p>Varios métodos de notificación se convierten en decoradores.</p></figcaption></figure>
+
+El código cliente debe envolver un objeto notificador básico dentro de un grupo de decoradores que satisfagan las preferencias del cliente. Los objetos resultantes se estructurarán como una pila.
+
+<figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption><p>Las aplicaciones pueden configurar pilas complejas de decoradores de notificación.</p></figcaption></figure>
+
+El último decorador de la pila será el objeto con el que el cliente trabaja. Debido a que todos los decoradores implementan la misma interfaz que la notificadora base, al resto del código cliente no le importa si está trabajando con el objeto notificador “puro” o con el decorado.
+
+Podemos aplicar la misma solución a otras funcionalidades, como el formateo de mensajes o la composición de una lista de destinatarios. El cliente puede decorar el objeto con los decoradores personalizados que desee, siempre y cuando sigan la misma interfaz que los demás.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes extender el comportamiento de un objeto sin crear una nueva subclase.
+
+:heavy\_check\_mark:  Puedes añadir o eliminar responsabilidades de un objeto durante el tiempo de ejecución.
+
+:heavy\_check\_mark:  Puedes combinar varios comportamientos envolviendo un objeto con varios decoradores.
+
+:heavy\_check\_mark:  Principio de responsabilidad única. Puedes dividir una clase monolítica que implementa muchas variantes posibles de comportamiento, en varias clases más pequeñas.
+
+:heavy\_multiplication\_x:  Resulta difícil eliminar un wrapper específico de la pila de wrappers.
+
+:heavy\_multiplication\_x:  Es difícil implementar un decorador de tal forma que su comportamiento no dependa del orden en la pila de decoradores.
+
+:heavy\_multiplication\_x:  El código de configuración inicial de las capas pueden tener un aspecto desagradable.
+
+## Decorator in Java
+
+### Decoradores de codificación y compresión <a href="#example-0-title" id="example-0-title"></a>
+
+Este ejemplo muestra cómo puedes ajustar el comportamiento de un objeto sin cambiar su código.
+
+Inicialmente, la clase de la lógica de negocio sólo podía leer y escribir datos en texto sin formato. Después creamos varias pequeñas clases envoltorio que añaden un nuevo comportamiento tras ejecutar operaciones estándar en un objeto envuelto.
+
+El primer _wrapper_ codifica y decodifica información, y el segundo comprime y extrae datos.
+
+Puedes incluso combinar estos _wrappers_ envolviendo un decorador con otro.

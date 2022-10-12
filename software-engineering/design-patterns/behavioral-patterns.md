@@ -16,7 +16,7 @@ Imagina que estás trabajando en un sistema de pedidos online. Quieres restringi
 
 Tras planificar un poco, te das cuenta de que estas comprobaciones deben realizarse secuencialmente. La aplicación puede intentar autenticar a un usuario en el sistema cuando reciba una solicitud que contenga las credenciales del usuario. Sin embargo, si esas credenciales no son correctas y la autenticación falla, no hay razón para proceder con otras comprobaciones.
 
-<figure><img src="../../.gitbook/assets/problem1-es.png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem1-es (4).png" alt=""><figcaption><p>La solicitud debe pasar una serie de comprobaciones antes de que el propio sistema de pedidos pueda gestionarla.</p></figcaption></figure>
 
 Durante los meses siguientes, implementas varias de esas comprobaciones secuenciales.
 
@@ -193,7 +193,7 @@ Independientemente de cómo se estructure una colección, <mark style="backgroun
 
 Esto puede parecer un trabajo sencillo si tienes una colección basada en una lista. En este caso sólo tienes que recorrer en bucle todos sus elementos. Pero, ¿cómo recorres secuencialmente elementos de una estructura compleja de datos, como un árbol? Por ejemplo, un día puede bastarte con un recorrido de profundidad de un árbol, pero, al día siguiente, quizá necesites un recorrido en anchura. Y, la semana siguiente, puedes necesitar otra cosa, como un acceso aleatorio a los elementos del árbol.
 
-<figure><img src="../../.gitbook/assets/problem2 (2).png" alt=""><figcaption><p>La misma colección puede recorrerse de varias formas diferentes.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem2 (2) (1).png" alt=""><figcaption><p>La misma colección puede recorrerse de varias formas diferentes.</p></figcaption></figure>
 
 Añadir más y más algoritmos de recorrido a la colección nubla gradualmente su responsabilidad principal, que es el almacenamiento eficiente de la información. Además, puede que algunos algoritmos estén personalizados para una aplicación específica, por lo que incluirlos en una clase genérica de colección puede resultar extraño.
 
@@ -441,7 +441,7 @@ El objeto que tiene un estado interesante suele denominarse _sujeto_, pero, como
 
 El patrón Observer sugiere que añadas un mecanismo de suscripción a la clase notificadora para que los objetos individuales puedan suscribirse o cancelar su suscripción a un flujo de eventos que proviene de esa notificadora. ¡No temas! No es tan complicado como parece. En realidad, este mecanismo consiste en: 1) un campo matriz para almacenar una lista de referencias a objetos suscriptores y 2) varios métodos públicos que permiten añadir suscriptores y eliminarlos de esa lista.
 
-<figure><img src="../../.gitbook/assets/solution1-es.png" alt=""><figcaption><p>Un mecanismo de suscripción permite a los objetos individuales suscribirse a notificaciones de eventos.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution1-es (4).png" alt=""><figcaption><p>Un mecanismo de suscripción permite a los objetos individuales suscribirse a notificaciones de eventos.</p></figcaption></figure>
 
 Ahora, cuando le sucede un evento importante al notificador, recorre sus suscriptores y llama al método de notificación específico de sus objetos.
 

@@ -36,7 +36,7 @@ No obstante, hay una pequeña limitación: las subclases sólo pueden devolver p
 
 Por ejemplo, tanto la clase `Camión` como la clase `Barco` deben implementar la interfaz `Transporte`, que declara un método llamado `entrega`. Cada clase implementa este método de forma diferente: los camiones entregan su carga por tierra, mientras que los barcos lo hacen por mar. El método fábrica dentro de la clase `LogísticaTerrestre` devuelve objetos de tipo camión, mientras que el método fábrica de la clase `LogísticaMarítima` devuelve barcos.
 
-<figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption><p>Siempre y cuando todas las clases de producto implementen una interfaz común, podrás pasar sus objetos al código cliente sin descomponerlo.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution3-es (2).png" alt=""><figcaption><p>Siempre y cuando todas las clases de producto implementen una interfaz común, podrás pasar sus objetos al código cliente sin descomponerlo.</p></figcaption></figure>
 
 El código que utiliza el método fábrica (a menudo denominado código _cliente_) no encuentra diferencias entre los productos devueltos por varias subclases, y trata a todos los productos como la clase abstracta `Transporte`. El cliente sabe que todos los objetos de transporte deben tener el método `entrega`, pero no necesita saber cómo funciona exactamente.
 
@@ -106,7 +106,7 @@ Lo primero que sugiere el patrón Abstract Factory es que declaremos de forma ex
 
 El siguiente paso consiste en declarar la _Fábrica abstracta_: una interfaz con una lista de métodos de creación para todos los productos que son parte de la familia de productos (por ejemplo, `crearSilla`, `crearSofá` y `crearMesilla`). Estos métodos deben devolver productos **abstractos** representados por las interfaces que extrajimos previamente: `Silla`, `Sofá`, `Mesilla`, etc.
 
-<figure><img src="../../.gitbook/assets/solution2.png" alt=""><figcaption><p>Cada fábrica concreta se corresponde con una variante específica del producto.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution2 (1).png" alt=""><figcaption><p>Cada fábrica concreta se corresponde con una variante específica del producto.</p></figcaption></figure>
 
 Ahora bien, ¿qué hay de las variantes de los productos? Para cada variante de una familia de productos, creamos una clase de fábrica independiente basada en la interfaz `FábricaAbstracta`. Una fábrica es una clase que devuelve productos de un tipo particular. Por ejemplo, la `FábricadeMueblesModernos` sólo puede crear objetos de `SillaModerna`, `SofáModerno` y `MesillaModerna`.
 
