@@ -539,7 +539,7 @@ El patrón State sugiere que crees nuevas clases para todos los estados posibles
 
 En lugar de implementar todos los comportamientos por su cuenta, el objeto original, llamado _contexto_, almacena una referencia a uno de los objetos de estado que representa su estado actual y delega todo el trabajo relacionado con el estado a ese objeto.
 
-<figure><img src="../../.gitbook/assets/solution-es (2).png" alt=""><figcaption><p>Documento delega el trabajo a un objeto de estado.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution-es (2) (1).png" alt=""><figcaption><p>Documento delega el trabajo a un objeto de estado.</p></figcaption></figure>
 
 Para la transición del contexto a otro estado, sustituye el objeto de estado activo por otro objeto que represente ese nuevo estado. Esto sólo es posible si todas las clases de estado siguen la misma interfaz y el propio contexto funciona con esos objetos a través de esa interfaz.
 
@@ -682,7 +682,7 @@ El patrón Template Method sugiere que dividas un algoritmo en una serie de paso
 
 Veamos cómo funciona en nuestra aplicación de minería de datos. Podemos crear una clase base para los tres algoritmos de análisis. Esta clase define un método plantilla consistente en una serie de llamadas a varios pasos de procesamiento de documentos.
 
-<figure><img src="../../.gitbook/assets/solution-es.png" alt=""><figcaption><p>El método plantilla divide el algoritmo en pasos, permitiendo a las subclases sobrescribir estos pasos pero no el método en sí.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution-es (3).png" alt=""><figcaption><p>El método plantilla divide el algoritmo en pasos, permitiendo a las subclases sobrescribir estos pasos pero no el método en sí.</p></figcaption></figure>
 
 Al principio, podemos declarar todos los pasos como `abstractos`, forzando a las subclases a proporcionar sus propias implementaciones para estos métodos. En nuestro caso, las subclases ya cuentan con todas las implementaciones necesarias, por lo que lo único que tendremos que hacer es ajustar las firmas de los métodos para que coincidan con los métodos de la superclase.
 
