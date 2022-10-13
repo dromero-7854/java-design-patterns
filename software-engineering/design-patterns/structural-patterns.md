@@ -309,3 +309,69 @@ Inicialmente, la clase de la lógica de negocio sólo podía leer y escribir dat
 El primer _wrapper_ codifica y decodifica información, y el segundo comprime y extrae datos.
 
 Puedes incluso combinar estos _wrappers_ envolviendo un decorador con otro.
+
+```
+decorator
+├── decorators 
+│   ├── DataSource.java (Una interfaz común de datos que define operaciones de leer y escribir)
+│   ├── FileDataSource.java (Escritor-lector de datos simple)
+│   ├── DataSourceDecorator.java (Decorador abstracto base)
+│   ├── EncryptionDecorator.java (Decorador de codificación)
+│   └── CompressionDecorator.java (Decorador de compresión)
+└── Demo.java (Código cliente)
+```
+
+:link: [Decorator in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/decorator/example)
+
+## Facade
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Facade** es un patrón de diseño estructural que proporciona una interfaz simplificada a una biblioteca, un framework o cualquier otro grupo complejo de clases.
+
+<figure><img src="../../.gitbook/assets/facade.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Imagina que debes lograr que tu código trabaje con un amplio grupo de objetos que pertenecen a una sofisticada biblioteca o _framework_. Normalmente, debes inicializar todos esos objetos, llevar un registro de las dependencias, ejecutar los métodos en el orden correcto y así sucesivamente.
+
+Como resultado, la lógica de negocio de tus clases se vería estrechamente acoplada a los detalles de implementación de las clases de terceros, haciéndola difícil de comprender y mantener.
+
+### Solución <a href="#solution" id="solution"></a>
+
+Una fachada es una clase que proporciona una interfaz simple a un subsistema complejo que contiene muchas partes móviles. Una fachada puede proporcionar una funcionalidad limitada en comparación con trabajar directamente con el subsistema. Sin embargo, tan solo incluye las funciones realmente importantes para los clientes.
+
+Tener una fachada resulta útil cuando tienes que integrar tu aplicación con una biblioteca sofisticada con decenas de funciones, de la cual sólo necesitas una pequeña parte.
+
+Por ejemplo, una aplicación que sube breves vídeos divertidos de gatos a las redes sociales, podría potencialmente utilizar una biblioteca de conversión de vídeo profesional. Sin embargo, lo único que necesita en realidad es una clase con el método simple `codificar(nombreDelArchivo, formato)`. Una vez que crees dicha clase y la conectes con la biblioteca de conversión de vídeo, tendrás tu primera fachada.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes aislar tu código de la complejidad de un subsistema.
+
+:heavy\_multiplication\_x:  Una fachada puede convertirse en [un objeto todopoderoso](https://refactoring.guru/es/antipatterns/god-object) acoplado a todas las clases de una aplicación.
+
+## Facade in Java
+
+### Interfaz simple para una biblioteca compleja de conversión de video <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón Facade simplifica la comunicación con un _framework_ complejo de conversión de video.
+
+El patrón Facade proporciona una única clase con un único método que gestiona toda la complejidad de configurar las clases correctas del _framework_ y recuperar el resultado en el formato correcto.
+
+```
+facade
+├── some_complex_media_library (Biblioteca compleja de conversión de video)
+│   ├── VideoFile.java
+│   ├── Codec.java
+│   ├── MPEG4CompressionCodec.java
+│   ├── OggCompressionCodec.java
+│   ├── CodecFactory.java
+│   ├── BitrateReader.java
+│   └── AudioMixer.java
+├── facade
+│   └── VideoConversionFacade.java (Facade proporciona una interfaz simple de conversión de video)
+└── Demo.java (Código cliente)
+```
+
+:link: [Facade in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/facade/example)
