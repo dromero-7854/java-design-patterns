@@ -90,7 +90,7 @@ Imagina que estás creando un simulador de tienda de muebles. Tu código está c
 1. Una familia de productos relacionados, digamos: `Silla` + `Sofá` + `Mesilla`.
 2. Algunas variantes de esta familia. Por ejemplo, los productos `Silla` + `Sofá` + `Mesilla` están disponibles en estas variantes: `Moderna`, `Victoriana`, `ArtDecó`.
 
-<figure><img src="../../.gitbook/assets/problem-es.png" alt=""><figcaption><p>Familias de productos y sus variantes.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem-es (4).png" alt=""><figcaption><p>Familias de productos y sus variantes.</p></figcaption></figure>
 
 Necesitamos una forma de crear objetos individuales de mobiliario para que combinen con otros objetos de la misma familia. Los clientes se enfadan bastante cuando reciben muebles que no combinan.
 

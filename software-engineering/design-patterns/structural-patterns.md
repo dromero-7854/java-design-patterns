@@ -16,7 +16,7 @@ Imagina que estás creando una aplicación de monitoreo del mercado de valores. 
 
 En cierto momento, decides mejorar la aplicación integrando una inteligente biblioteca de análisis de una tercera persona. Pero hay una trampa: la biblioteca de análisis solo funciona con datos en formato JSON.
 
-<figure><img src="../../.gitbook/assets/problem-es (1).png" alt=""><figcaption><p>No puedes utilizar la biblioteca de análisis “tal cual” porque ésta espera los datos en un formato que es incompatible con tu aplicación.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/problem-es (1) (1).png" alt=""><figcaption><p>No puedes utilizar la biblioteca de análisis “tal cual” porque ésta espera los datos en un formato que es incompatible con tu aplicación.</p></figcaption></figure>
 
 Podrías cambiar la biblioteca para que funcione con XML. Sin embargo, esto podría descomponer parte del código existente que depende de la biblioteca. Y, lo que es peor, podrías no tener siquiera acceso al código fuente de la biblioteca, lo que hace imposible esta solución.
 
@@ -90,7 +90,7 @@ Este problema se presenta porque intentamos extender las clases de forma en dos 
 
 El patrón Bridge intenta resolver este problema pasando de la herencia a la composición del objeto. Esto quiere decir que se extrae una de las dimensiones a una jerarquía de clases separada, de modo que las clases originales referencian un objeto de la nueva jerarquía, en lugar de tener todo su estado y sus funcionalidades dentro de una clase.
 
-<figure><img src="../../.gitbook/assets/solution-es.png" alt=""><figcaption><p>Puedes evitar la explosión de una jerarquía de clase transformándola en varias jerarquías relacionadas.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution-es (1).png" alt=""><figcaption><p>Puedes evitar la explosión de una jerarquía de clase transformándola en varias jerarquías relacionadas.</p></figcaption></figure>
 
 Con esta solución, podemos extraer el código relacionado con el color y colocarlo dentro de su propia clase, con dos subclases: `Rojo` y `Azul`. La clase `Forma` obtiene entonces un campo de referencia que apunta a uno de los objetos de color. Ahora la forma puede delegar cualquier trabajo relacionado con el color al objeto de color vinculado. Esa referencia actuará como un puente entre las clases `Forma` y `Color`. En adelante, añadir nuevos colores no exigirá cambiar la jerarquía de forma y viceversa.
 
@@ -276,7 +276,7 @@ En nuestro ejemplo de las notificaciones, dejemos la sencilla funcionalidad de l
 
 El código cliente debe envolver un objeto notificador básico dentro de un grupo de decoradores que satisfagan las preferencias del cliente. Los objetos resultantes se estructurarán como una pila.
 
-<figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption><p>Las aplicaciones pueden configurar pilas complejas de decoradores de notificación.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution3-es (3).png" alt=""><figcaption><p>Las aplicaciones pueden configurar pilas complejas de decoradores de notificación.</p></figcaption></figure>
 
 El último decorador de la pila será el objeto con el que el cliente trabaja. Debido a que todos los decoradores implementan la misma interfaz que la notificadora base, al resto del código cliente no le importa si está trabajando con el objeto notificador “puro” o con el decorado.
 
@@ -375,3 +375,151 @@ facade
 ```
 
 :link: [Facade in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/facade/example)
+
+## Flyweight
+
+**Flyweight** es un patrón de diseño estructural que te permite mantener más objetos dentro de la cantidad disponible de RAM compartiendo las partes comunes del estado entre varios objetos en lugar de mantener toda la información en cada objeto.
+
+<figure><img src="../../.gitbook/assets/flyweight.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+Para divertirte un poco después de largas horas de trabajo, decides crear un sencillo videojuego en el que los jugadores se tienen que mover por un mapa disparándose entre sí. Decides implementar un sistema de partículas realistas que lo distinga de otros juegos. Grandes cantidades de balas, misiles y metralla de las explosiones volarán por todo el mapa, ofreciendo una apasionante experiencia al jugador.
+
+Al terminarlo, subes el último cambio, compilas el juego y se lo envias a un amigo para una partida de prueba. Aunque el juego funcionaba sin problemas en tu máquina, tu amigo no logró jugar durante mucho tiempo. En su computadora el juego se paraba a los pocos minutos de empezar. Tras dedicar varias horas a revisar los registros de depuración, descubres que el juego se paraba debido a una cantidad insuficiente de RAM. Resulta que el equipo de tu amigo es mucho menos potente que tu computadora, y esa es la razón por la que el problema surgió tan rápido en su máquina.
+
+El problema estaba relacionado con tu sistema de partículas. Cada partícula, como una bala, un misil o un trozo de metralla, estaba representada por un objeto separado que contenía gran cantidad de datos. En cierto momento, cuando la masacre alcanzaba su punto culminante en la pantalla del jugador, las partículas recién creadas ya no cabían en el resto de RAM, provocando que el programa fallara.
+
+<figure><img src="../../.gitbook/assets/problem-es.png" alt=""><figcaption></figcaption></figure>
+
+### Solución <a href="#solution" id="solution"></a>
+
+Observando más atentamente la clase `Partícula`, puede ser que te hayas dado cuenta de que los campos de color y _sprite_ consumen mucha más memoria que otros campos. Lo que es peor, esos dos campos almacenan información casi idéntica de todas las partículas. Por ejemplo, todas las balas tienen el mismo color y sprite.
+
+<figure><img src="../../.gitbook/assets/solution1-es (5).png" alt=""><figcaption></figcaption></figure>
+
+Otras partes del estado de una partícula, como las coordenadas, vector de movimiento y velocidad, son únicas en cada partícula. Después de todo, los valores de estos campos cambian a lo largo del tiempo. Estos datos representan el contexto siempre cambiante en el que existe la partícula, mientras que el color y el sprite se mantienen constantes.
+
+Esta información constante de un objeto suele denominarse su _estado intrínseco_. Existe dentro del objeto y otros objetos únicamente pueden leerla, no cambiarla. El resto del estado del objeto, a menudo alterado “desde el exterior” por otros objetos, se denomina el _estado extrínseco_.
+
+El patrón Flyweight sugiere que dejemos de almacenar el estado extrínseco dentro del objeto. En lugar de eso, debes pasar este estado a métodos específicos que dependen de él. Tan solo el estado intrínseco se mantiene dentro del objeto, permitiendo que lo reutilices en distintos contextos. Como resultado, necesitarás menos de estos objetos, ya que sólo se diferencian en el estado intrínseco, que cuenta con muchas menos variaciones que el extrínseco.
+
+<figure><img src="../../.gitbook/assets/solution3-es.png" alt=""><figcaption></figcaption></figure>
+
+Regresemos a nuestro juego. Dando por hecho que hemos extraído el estado extrínseco de la clase de nuestra partícula, únicamente tres objetos diferentes serán suficientes para representar todas las partículas del juego: una bala, un misil y un trozo de metralla. Como probablemente habrás adivinado, un objeto que sólo almacena el estado intrínseco se denomina _Flyweight_ (peso mosca).
+
+**Almacenamiento del estado extrínseco**
+
+¿A dónde se mueve el estado extrínseco? Alguna clase tendrá que almacenarlo, ¿verdad? En la mayoría de los casos, se mueve al objeto contenedor, que reúne objetos antes de que apliquemos el patrón.
+
+En nuestro caso, se trata del objeto principal `Juego`, que almacena todas las partículas en su campo `partículas`. Para mover el estado extrínseco a esta clase, debes crear varios campos matriz para almacenar coordenadas, vectores y velocidades de cada partícula individual. Pero eso no es todo. Necesitas otra matriz para almacenar referencias a un objeto _flyweight_ específico que represente una partícula. Estas matrices deben estar sincronizadas para que puedas acceder a toda la información de una partícula utilizando el mismo índice.
+
+<figure><img src="../../.gitbook/assets/solution2-es (2).png" alt=""><figcaption></figcaption></figure>
+
+Una solución más elegante sería crear una clase de contexto separada que almacene el estado extrínseco junto con la referencia al objeto flyweight. Esta solución únicamente exigiría tener una matriz en la clase contenedora.
+
+¡Espera un momento! ¿No deberíamos tener tantos de estos objetos contextuales como teníamos al principio? Técnicamente, sí. Pero el caso es que estos objetos son mucho más pequeños que antes. Los campos que consumen más memoria se han movido a unos pocos objetos flyweight. Ahora, cientos de pequeños objetos contextuales pueden reutilizar un único objeto flyweight pesado, en lugar de almacenar cientos de copias de sus datos.
+
+**Flyweight y la inmutabilidad**
+
+Debido a que el mismo objeto flyweight puede utilizarse en distintos contextos, debes asegurarte de que su estado no se pueda modificar. Un objeto flyweight debe inicializar su estado una sola vez a través de parámetros del constructor. No debe exponer ningún método _set_ (modificador) o campo público a otros objetos.
+
+**Fábrica flyweight**
+
+Para un acceso más cómodo a varios objetos flyweight, puedes crear un método fábrica que gestione un grupo de objetos flyweight existentes. El método acepta el estado intrínseco del flyweight deseado por un cliente, busca un objeto flyweight existente que coincida con este estado y lo devuelve si lo encuentra. Si no, crea un nuevo objeto flyweight y lo añade al grupo.
+
+Existen muchas opciones para colocar este método. El lugar más obvio es un contenedor flyweight. Alternativamente, podrías crea un nueva clase fábrica y hacer estático el método fábrica para colocarlo dentro de una clase flyweight real.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes ahorrar mucha RAM, siempre que tu programa tenga toneladas de objetos similares.
+
+:heavy\_multiplication\_x:  Puede que estés cambiando RAM por ciclos CPU cuando deba calcularse de nuevo parte de la información de contexto cada vez que alguien invoque un método flyweight.
+
+:heavy\_multiplication\_x:  El código se complica mucho. Los nuevos miembros del equipo siempre estarán preguntándose por qué el estado de una entidad se separó de tal manera.
+
+## Flyweight in Java
+
+### Representación de un bosque <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, vamos a representar un bosque (¡1 000 000 de árboles!). Cada árbol será representado por su propio objeto, que tiene cierto estado (coordenadas, textura, etcétera). Aunque el programa hace su trabajo principal, naturalmente consume mucha memoria RAM.
+
+La razón es sencilla: demasiados objetos de árbol duplican la información (nombre, textura, color). Por eso podemos aplicar el patrón Flyweight y almacenar estos valores dentro de objetos flyweight separados (la clase `TreeType` (TipodeÁrbol)). Ahora, en lugar de almacenar la misma información en miles de objetos `Tree` (Árbol), vamos a referenciar uno de los objetos flyweight con un grupo particular de valores.
+
+El código cliente no se dará cuenta de nada, ya que la complejidad de reutilizar objetos flyweight queda enterrada dentro de una fábrica flyweight.
+
+```
+flyweight
+├── trees
+│   ├── Tree.java (Contiene estado único para cada árbol)
+│   ├── TreeType.java (Contiene estado compartido por varios árboles)
+│   └── TreeFactory.java (Encapsula la complejidad de la creación de flyweight)
+├── forest
+│   └── Forest.java (Bosque que dibujamos)
+└── Demo.java (Código cliente)
+```
+
+:link: [Flyweight in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/flyweight/example)
+
+## Proxy
+
+### Propósito <a href="#intent" id="intent"></a>
+
+**Proxy** es un patrón de diseño estructural que te permite proporcionar un sustituto o marcador de posición para otro objeto. Un proxy controla el acceso al objeto original, permitiéndote hacer algo antes o después de que la solicitud llegue al objeto original.
+
+<figure><img src="../../.gitbook/assets/proxy.png" alt=""><figcaption></figcaption></figure>
+
+### Problema <a href="#problem" id="problem"></a>
+
+¿Por qué querrías controlar el acceso a un objeto? Imagina que tienes un objeto enorme que consume una gran cantidad de recursos del sistema. Lo necesitas de vez en cuando, pero no siempre.
+
+<figure><img src="../../.gitbook/assets/problem-es (1).png" alt=""><figcaption><p>Las consultas a las bases de datos pueden ser muy lentas.</p></figcaption></figure>
+
+Puedes llevar a cabo una implementación diferida, es decir, crear este objeto sólo cuando sea realmente necesario. Todos los clientes del objeto tendrán que ejecutar algún código de inicialización diferida. Lamentablemente, esto seguramente generará una gran cantidad de código duplicado.
+
+En un mundo ideal, querríamos meter este código directamente dentro de la clase de nuestro objeto, pero eso no siempre es posible. Por ejemplo, la clase puede ser parte de una biblioteca cerrada de un tercero.
+
+### Solución <a href="#solution" id="solution"></a>
+
+El patrón Proxy sugiere que crees una nueva clase proxy con la misma interfaz que un objeto de servicio original. Después actualizas tu aplicación para que pase el objeto proxy a todos los clientes del objeto original. Al recibir una solicitud de un cliente, el proxy crea un objeto de servicio real y le delega todo el trabajo.
+
+<figure><img src="../../.gitbook/assets/solution-es.png" alt=""><figcaption><p>El proxy se camufla como objeto de la base de datos. Puede gestionar la inicialización diferida y el caché de resultados sin que el cliente o el objeto real de la base de datos lo sepan.</p></figcaption></figure>
+
+Pero, ¿cuál es la ventaja? Si necesitas ejecutar algo antes o después de la lógica primaria de la clase, el proxy te permite hacerlo sin cambiar esa clase. Ya que el proxy implementa la misma interfaz que la clase original, puede pasarse a cualquier cliente que espere un objeto de servicio real.
+
+### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
+
+:heavy\_check\_mark:  Puedes controlar el objeto de servicio sin que los clientes lo sepan.
+
+:heavy\_check\_mark:  Puedes gestionar el ciclo de vida del objeto de servicio cuando a los clientes no les importa.
+
+:heavy\_check\_mark:  El proxy funciona incluso si el objeto de servicio no está listo o no está disponible.
+
+:heavy\_check\_mark:  P_rincipio de abierto/cerrado_. Puedes introducir nuevos proxies sin cambiar el servicio o los clientes.
+
+:heavy\_multiplication\_x:  El código puede complicarse ya que debes introducir gran cantidad de clases nuevas.
+
+:heavy\_multiplication\_x:  La respuesta del servicio puede retrasarse.
+
+## Proxy in Java
+
+### Proxy de caché <a href="#example-0-title" id="example-0-title"></a>
+
+En este ejemplo, el patrón Proxy ayuda a implementar la inicialización diferida y el almacenamiento en caché a una ineficiente biblioteca de integración de YouTube de un tercero.
+
+Proxy es muy valioso cuando tienes que añadir comportamientos a una clase cuyo código no puedes cambiar.
+
+```
+proxy
+├── some_cool_media_library
+│   ├── ThirdPartyYouTubeLib.java (Interfaz de servicio remoto)
+│   ├── ThirdPartyYouTubeClass.java (Implementación de servicio remoto)
+│   └── Video.java (Archivo de video)
+├── proxy
+│   └── YouTubeCacheProxy.java (Proxy de caché)
+├── downloader
+│   └── YouTubeDownloader.java (Aplicación de descarga de medios)
+└── Demo.java (Código de inicialización)
+```
+
+:link: [Proxy in Java](https://github.com/dromero-7854/software-engineering/tree/main/java-design-patterns-examples/src/proxy/example)

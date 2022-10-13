@@ -358,7 +358,7 @@ Todos los problemas que hemos experimentado han sido provocados por una encapsul
 
 <mark style="background-color:yellow;">El patrón sugiere almacenar la copia del estado del objeto en un objeto especial llamado</mark> _<mark style="background-color:yellow;">memento</mark>_<mark style="background-color:yellow;">. Los contenidos del memento no son accesibles para ningún otro objeto excepto el que lo produjo. Otros objetos deben comunicarse con mementos utilizando una interfaz limitada que pueda permitir extraer los metadatos de la instantánea (tiempo de creación, el nombre de la operación realizada, etc.), pero no el estado del objeto original contenido en la instantánea.</mark>
 
-<figure><img src="../../.gitbook/assets/solution-es (1).png" alt=""><figcaption><p>El originador tiene pleno acceso al memento, mientras que el cuidador sólo puede acceder a los metadatos.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/solution-es (1) (1).png" alt=""><figcaption><p>El originador tiene pleno acceso al memento, mientras que el cuidador sólo puede acceder a los metadatos.</p></figcaption></figure>
 
 Una política tan restrictiva te permite almacenar mementos dentro de otros objetos, normalmente llamados _cuidadores_. Debido a que el cuidador trabaja con el memento únicamente a través de la interfaz limitada, no puede manipular el estado almacenado dentro del memento. Al mismo tiempo, el originador tiene acceso a todos los campos dentro del memento, permitiéndole restaurar su estado previo a voluntad.
 
