@@ -20,7 +20,7 @@ Dentro de la programación imperativa se desglosan otras:
 * PE - Programación Estructurada
 * POO - Programación Orientada a Objetos
 * POE - Programación Orientada a Eventos
-* POE - Programación Reactiva
+* PR - Programación Reactiva
 
 ### Pros y contras <a href="#pros-cons" id="pros-cons"></a>
 
