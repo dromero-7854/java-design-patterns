@@ -165,7 +165,7 @@ Calcular Promedio - Modo Imperativo - calcular promedio (2, 3) = 2.5
 Calcular Promedio - Modo Declarativo - calcular promedio (2, 3) = 2.5
 ```
 
-### Expresiones Lambda - Scope (ámbito o alcance)
+### Scope (Ámbito o alcance)
 
 ```java
 package com.software_engineering.java8.lambda.scope;
