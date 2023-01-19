@@ -467,3 +467,14 @@ public class MethodReferenceApp {
 
 }
 ```
+
+```
+Método referido estático
+[Code, Jaime, Mito]
+[Code, Jaime, Mito]
+[Code, Jaime, Mito]
+Método referido instancia particular de una clase
+1 - MitoCode1
+2 - MitoCode2
+3 - MitoCode3
+```
