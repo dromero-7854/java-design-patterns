@@ -153,16 +153,11 @@ public class SintaxisLambda {
 ```
 
 ```
-Ordenar lista Modo Imperativo
-Code
-Mito
-MitoCode
-Ordenar lista Modo Declarativo
-Code
-Mito
-MitoCode
-Calcular Promedio - Modo Imperativo - calcular promedio (2, 3) = 2.5
-Calcular Promedio - Modo Declarativo - calcular promedio (2, 3) = 2.5
+2.5
+2.5
+2.5
+2.0
+5.0
 ```
 
 ### Scope (Ámbito o alcance)
@@ -228,6 +223,70 @@ public class Scopes {
     System.out.println(app.probarVariableLocalConLambda());
     System.out.println(app.probarVariablesEstaticas());
     System.out.println(app.probarAtributos());
+  }
+
+}
+```
+
+```
+5.0
+5.0
+5.0
+5.0
+```
+
+### Default Methods
+
+```java
+package com.software_engineering.java8.default_method;
+
+public interface PersonaA {
+
+  public void caminar();
+
+  default public void hablar() {
+    System.out.println("Saludos!!!");
+  }
+
+}
+```
+
+```java
+package com.software_engineering.java8.default_method;
+
+public interface PersonaB {
+
+  default public void hablar() {
+    System.out.println("Hellooooo!!!");
+  }
+
+}
+```
+
+```java
+package com.software_engineering.java8.default_method;
+
+public class DefaultMethod implements PersonaA, PersonaB {
+
+  @Override
+  public void caminar() {
+    System.out.println("Caminar");
+  }
+
+  // Si implemento otra interfaz que tambien tenga un default method "hablar", el compilador va a dar una excepción
+  // "Duplicate default methods named hablar with the parameters () and () are inherited from the types PersonaB and PersonaA"
+  // De esta manera puedo definir que default method quiero usar
+  // ⤋
+  @Override
+  public void hablar() {
+    PersonaA.super.hablar();
+  }
+  // Otra opción es sobreescribir el default method
+
+  public static void main(String[] args) {
+    DefaultMethod app = new DefaultMethod();
+    app.caminar();
+    app.hablar();
   }
 
 }
