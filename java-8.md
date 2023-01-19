@@ -291,3 +291,179 @@ public class DefaultMethod implements PersonaA, PersonaB {
 
 }
 ```
+
+### Interfaces Funcionales
+
+```java
+package com.software_engineering.java8.functional_interfaces;
+
+//
+// Una interfaz funcional es aquella que solo define un sólo método
+// De esta manera se formaliza en java8 una interfaz funcional
+//
+@FunctionalInterface
+public interface Operacion {
+
+  double calcularPromedio(double n1, double n2);
+
+}
+```
+
+```java
+package com.software_engineering.java8.functional_interfaces;
+
+public class FunctionalInterfacesApp {
+
+  public double operar(double x, double y) {
+    Operacion op = (n1, n2) -> n1 + n2;
+    return op.calcularPromedio(x, y);
+  }
+
+  public static void main(String[] args) {
+    FunctionalInterfacesApp app = new FunctionalInterfacesApp();
+    double result = app.operar(2, 3);
+    System.out.println(result);
+  }
+
+}
+```
+
+### Method Reference
+
+```java
+package com.software_engineering.java8.method_reference;
+
+public class Persona {
+
+  private int id;
+
+  private String nombre;
+
+  public Persona(int id, String nombre) {
+    super();
+    this.id = id;
+    this.nombre = nombre;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+}
+```
+
+```java
+package com.software_engineering.java8.method_reference;
+
+@FunctionalInterface
+public interface Operacion {
+
+  void saludar();
+
+}
+```
+
+```java
+package com.software_engineering.java8.method_reference;
+
+@FunctionalInterface
+public interface IPersona {
+
+  Persona crear(int id, String nombre);
+
+}
+```
+
+```java
+package com.software_engineering.java8.method_reference;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class MethodReferenceApp {
+
+  public static void metodoEstaticoRef() {
+    System.out.println("Método referido estático");
+  }
+
+  public void metodoInstanciaObjetoArbitrarioRef() {
+    String[] nombres = {
+      "Mito",
+      "Code",
+      "Jaime"
+    };
+    Arrays.sort(nombres, new Comparator < String > () {
+      @Override
+      public int compare(String o1, String o2) {
+        return o1.compareToIgnoreCase(o2);
+      }
+    });
+    System.out.println(Arrays.toString(nombres));
+
+    String[] nombres2 = {
+      "Mito",
+      "Code",
+      "Jaime"
+    };
+    Arrays.sort(nombres2, (s1, s2) -> s1.compareToIgnoreCase(s2));
+    System.out.println(Arrays.toString(nombres2));
+
+    String[] nombres3 = {
+      "Mito",
+      "Code",
+      "Jaime"
+    };
+    Arrays.sort(nombres3, String::compareToIgnoreCase);
+    System.out.println(Arrays.toString(nombres3));
+  }
+
+  public void metodoInstanciaParticularRef() {
+    System.out.println("Método referido instancia particular de una clase");
+  }
+
+  public void constructorRef() {
+    IPersona iper = new IPersona() {
+      @Override
+      public Persona crear(int id, String nombre) {
+        return new Persona(id, nombre);
+      }
+    };
+    Persona per = iper.crear(1, "MitoCode1");
+    System.out.println(per.getId() + " - " + per.getNombre());
+
+    iper = (x, y) -> new Persona(x, y);
+    per = iper.crear(2, "MitoCode2");
+    System.out.println(per.getId() + " - " + per.getNombre());
+
+    iper = Persona::new;
+    per = iper.crear(3, "MitoCode3");
+    System.out.println(per.getId() + " - " + per.getNombre());
+  }
+
+  public static void main(String[] args) {
+    Operacion op1 = MethodReferenceApp::metodoEstaticoRef;
+    op1.saludar();
+
+    MethodReferenceApp app = new MethodReferenceApp();
+    app.metodoInstanciaObjetoArbitrarioRef();
+
+    Operacion op2 = app::metodoInstanciaParticularRef;
+    op2.saludar();
+
+    app.constructorRef();
+  }
+
+}
+```
